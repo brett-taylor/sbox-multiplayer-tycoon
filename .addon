@@ -1,0 +1,71 @@
+{
+  "Title": "Multiplayer Tycoon",
+  "Type": "game",
+  "Org": "waisiemilliams",
+  "Ident": "multi_tycoon",
+  "Tags": "",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": [],
+  "HasCode": true,
+  "CodePath": "/code/",
+  "Metadata": {
+    "MaxPlayers": 64,
+    "MinPlayers": 1,
+    "GameNetworkType": "Multiplayer",
+    "MapSelect": "Empty",
+    "MapList": [
+      "multi_tycoon_test"
+    ],
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "ProjectTemplate": null,
+    "ParentPackage": "",
+    "DefaultLeaderboards": null,
+    "Collision": {
+      "Defaults": {
+        "solid": "Collide",
+        "trigger": "Trigger",
+        "ladder": "Ignore",
+        "water": "Trigger",
+        "vehicle": "Unset"
+      },
+      "Pairs": [
+        {
+          "a": "solid",
+          "b": "solid",
+          "r": "Collide"
+        },
+        {
+          "a": "trigger",
+          "b": "playerclip",
+          "r": "Ignore"
+        },
+        {
+          "a": "solid",
+          "b": "trigger"
+        },
+        {
+          "a": "playerclip",
+          "b": "solid",
+          "r": "Collide"
+        },
+        {
+          "a": "trigger",
+          "b": "trigger"
+        },
+        {
+          "a": "solid",
+          "b": "vehicle"
+        },
+        {
+          "a": "trigger",
+          "b": "vehicle",
+          "r": "Trigger"
+        }
+      ]
+    }
+  }
+}

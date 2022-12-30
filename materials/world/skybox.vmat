@@ -1,0 +1,11 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "sky.vfx"
+
+	//---- Texture ----
+	g_flBrightnessExposureBias "0.000"
+	g_flRenderOnlyExposureBias "0.000"
+	SkyTexture "[0.643137 0.878431 0.988235 1.000000]"
+}

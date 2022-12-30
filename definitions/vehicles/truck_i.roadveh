@@ -1,0 +1,17 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	data = 
+	{
+		WheelSize = 20
+		MaximumSpeed = 500
+		AccelerationSpeed = 200
+		ReverseAccerlationSpeedModifier = 0.5
+		SimulatedLeftFrontWheelOffset = "42,32,0"
+		SimulatedRightFrontWheelOffset = "42,-32,0"
+		SimulatedLeftBackWheelOffset = "-42,32,0"
+		SimulatedRightBackWheelOffset = "-42,-32,0"
+		Name = "Truck I"
+		ModelPath = resource:"models/vehicles/truck_i/truck_i.vmdl"
+		Price = 3000
+	}
+}

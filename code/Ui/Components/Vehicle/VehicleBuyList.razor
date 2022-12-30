@@ -1,0 +1,26 @@
+﻿@using Sandbox.UI;
+@inherits Panel
+@attribute [StyleSheet("/Ui/Components/Vehicle/_VehicleList.scss")]
+
+<root>
+	<div class="vehicle-buy-grid">
+		@foreach (var buyableVehicle in BuyableVehicles)
+		{
+			<div class="vehicle-buy-item" @onclick="@( () => BuyVehicle(buyableVehicle) )">
+				<div class="vehicle-buy-item-header">
+				</div>
+				<div class="vehicle-buy-item-body">
+					<div class="vehicle-buy-item-body-title">@buyableVehicle.Name</div>
+					<div class="vehicle-buy-item-body-details"></div>
+					<div class="vehicle-buy-item-body-price">@buyableVehicle.Price</div>
+				</div>
+			</div>
+		}
+	</div>
+</root>
+
+<style lang="scss">
+	VehicleBuyList {
+		padding: 5px;
+	}
+</style>

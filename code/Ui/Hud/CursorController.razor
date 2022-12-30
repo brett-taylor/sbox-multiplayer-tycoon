@@ -1,0 +1,24 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.UI.Construct;
+@using System;
+
+@attribute [StyleSheet("/Ui/Hud/_CursorController.scss")]
+@inherits Panel
+
+@code {
+
+	private bool ShowCursor { get; set; } = true;
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		SetClass("show-cursor", TycoonHud.Instance.ShowCursor);
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(ShowCursor);
+	}
+}

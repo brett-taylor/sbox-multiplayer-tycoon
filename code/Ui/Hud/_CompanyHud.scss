@@ -1,0 +1,50 @@
+﻿CompanyHud {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+
+    & div:first-child {
+        margin-bottom: 4px;
+    }
+}
+
+.card {
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur( 30px );
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+}
+
+.show-cursor {
+    pointer-events: all;
+}
+
+.card-icon {
+    height: 100%;
+    padding: 10px 30px;
+    background-color: rgba(26, 126, 249, 0.5);
+    border-radius: 8px 0 0 8px;
+}
+
+.card-right {
+    text-align: center;
+    padding: 10px 30px;
+
+    label {
+        text-align: center;
+    }
+
+    button {
+
+
+        & :hover {
+            color: green;
+        }
+    }
+}

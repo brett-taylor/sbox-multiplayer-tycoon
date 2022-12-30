@@ -1,0 +1,45 @@
+﻿BuildHud {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.show-cursor {
+    pointer-events: all;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 40%;
+    margin: 0 auto;
+}
+
+.build-button {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur( 30px );
+    color: white;
+    font-size: 12px;
+    font-weight: bolder;
+    transition: margin-top 2s;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    transition: all 0.2s ease-out;
+    flex-basis: 33%;
+    margin: 5px;
+    padding: 10px;
+
+
+    & :hover {
+        cursor: pointer;
+        color: rgba(26, 126, 249, 1);
+    }
+}

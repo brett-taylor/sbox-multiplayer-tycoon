@@ -1,0 +1,30 @@
+﻿@using Sandbox.UI;
+@inherits Panel
+@attribute [StyleSheet("/Ui/Components/Vehicle/_VehicleList.scss")]
+
+<root>
+	<div class="vehicle-list">
+		@if (StoredVehicles.Count == 0)
+		{
+			<div class="vehicle-list-empty">
+				This depot contains no vehicles
+			</div>
+		}
+		else
+		{
+			@foreach (var storedVehicle in StoredVehicles)
+			{
+				<div class="vehicle-item">
+					<VehicleThumbnail VehicleGroup=@storedVehicle></VehicleThumbnail>
+					<button class="vehicle-item-button" @onclick="@( () => WithdrawVehicle(storedVehicle) )">Withdraw</button>
+				</div>	
+			}
+		}
+	</div>
+</root>
+
+<style lang="scss">
+	VehicleDepotWithdrawList {
+		padding: 5px;
+	}
+</style>

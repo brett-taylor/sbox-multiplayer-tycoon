@@ -1,0 +1,38 @@
+﻿@using Sandbox.UI;
+@using TycoonGame.Vehicles;
+@inherits Panel
+
+<root>
+	<div class="container">
+		<div class="icon" />
+		<div class="name">@VehicleGroup.Name</div>
+	</div>
+</root>
+
+@code {
+	public VehicleGroup VehicleGroup { get; set; }
+}
+
+<style lang="scss">
+	VehicleThumbnail {
+
+		.container {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.icon {
+			background-color: red;
+			margin-right: 5px;
+			min-width: 50px;
+			max-width: 50px;
+			min-height: 25px;
+			max-height: 25px;
+		}
+
+		.name {
+			font-weight: bold;
+		}
+	}
+</style>

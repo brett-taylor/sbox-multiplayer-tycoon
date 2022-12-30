@@ -1,0 +1,54 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.UI.Construct;
+@using System;
+@using System.Linq;
+@using System.Collections.Generic;
+@using TycoonGame.Building.Core;
+
+@attribute [StyleSheet("/Ui/Hud/_BuildHud.scss")]
+@inherits Panel
+
+<root>
+	<div class="container">
+		@foreach (var buildingDefinition in BuildingDefinitions)
+		{
+			<div class="build-button" onclick=@(() => StartBuilding(buildingDefinition))>
+				@buildingDefinition.BuildingName
+			</div>
+		}
+	</div>
+</root>
+
+@code {
+	private List<BuildingDefinition> BuildingDefinitions { get; set; } = new List<BuildingDefinition>();
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		base.OnAfterTreeRender(firstTime);
+
+		if (!firstTime)
+		{
+			return;
+		}
+
+		BuildingDefinitions = ResourceLibrary.GetAll<BuildingDefinition>().ToList();
+	}
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		SetClass("show-cursor", TycoonHud.Instance.ShowCursor);
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(BuildingDefinitions);
+	}
+
+	private void StartBuilding(BuildingDefinition buildingDefinition)
+	{
+		BuildingController.ConCmd_StartBuilding(buildingDefinition.ResourceId);
+	}
+}

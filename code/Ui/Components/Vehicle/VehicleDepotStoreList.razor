@@ -1,0 +1,30 @@
+﻿@using Sandbox.UI;
+@inherits Panel
+@attribute [StyleSheet("/Ui/Components/Vehicle/_VehicleList.scss")]
+
+<root>
+	<div class="vehicle-list">
+		@if (StorableVehicles.Count == 0)
+		{
+			<div class="vehicle-list-empty">
+				No Vehicles can be stored :(
+			</div>
+		}
+		else
+		{
+			@foreach (var storableVehicle in StorableVehicles)
+			{
+				<div class="vehicle-item">
+					<VehicleThumbnail VehicleGroup=@storableVehicle></VehicleThumbnail>
+					<button class="vehicle-item-button" @onclick="@( () => StoreVehicle(storableVehicle) )">Store</button>
+				</div>	
+			}
+		}
+	</div>
+</root>
+
+<style lang="scss">
+	VehicleDepotStoreList {
+		padding: 5px;
+	}
+</style>

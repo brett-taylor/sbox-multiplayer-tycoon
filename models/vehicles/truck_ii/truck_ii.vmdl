@@ -1,0 +1,116 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc29:version{3cec427c-1b0e-4d48-a90a-0436f33a6041} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "ModelModifierList"
+				children = 
+				[
+					{
+						_class = "ModelModifier_ScaleAndMirror"
+						scale = 5.0
+						mirror_x = false
+						mirror_y = false
+						mirror_z = false
+						flip_bone_forward = false
+						swap_left_and_right_bones = false
+					},
+				]
+			},
+			{
+				_class = "MaterialGroupList"
+				children = 
+				[
+					{
+						_class = "DefaultMaterialGroup"
+						remaps = 
+						[
+							{
+								from = "_defaultmat.vmat"
+								to = "materials/vehicles/truck_i/truck_i_default.vmat"
+							},
+							{
+								from = "cartire.vmat"
+								to = "materials/vehicles/truck_i/truck_i_default.vmat"
+							},
+							{
+								from = "lightback.vmat"
+								to = "materials/vehicles/truck_i/truck_i_lightback.vmat"
+							},
+							{
+								from = "lightfront.vmat"
+								to = "materials/vehicles/truck_i/truck_i_lightfront.vmat"
+							},
+							{
+								from = "paintgreen.vmat"
+								to = "materials/vehicles/truck_ii/truck_ii_paint_box.vmat"
+							},
+							{
+								from = "paintwhite.vmat"
+								to = "materials/vehicles/truck_ii/truck_ii_paint_front.vmat"
+							},
+							{
+								from = "plastic.vmat"
+								to = "materials/vehicles/truck_i/truck_i_plastic.vmat"
+							},
+							{
+								from = "window.vmat"
+								to = "materials/vehicles/truck_i/truck_i_window.vmat"
+							},
+						]
+						use_global_default = false
+						global_default_material = ""
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "default"
+						collision_tags = "solid"
+						origin = [ 0.064013, -0.032435, 7.026225 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 31.636784, 13.413799, 14.094719 ]
+					},
+				]
+			},
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						filename = "models/vehicles/truck_ii/delivery.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "BoundsCenter"
+						align_origin_y_type = "BoundsCenter"
+						align_origin_z_type = "BoundsMin"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = true
+							exception_list = 
+							[
+								"body",
+								"door",
+							]
+						}
+					},
+				]
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = ""
+		base_model_name = ""
+	}
+}
