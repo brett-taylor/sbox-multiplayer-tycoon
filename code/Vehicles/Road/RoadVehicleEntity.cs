@@ -27,6 +27,7 @@ public partial class RoadVehicleEntity : Prop, IInteractableEntity
 		Predictable = false;
 
 		Tags.Add( CustomTags.Vehicle );
+		Tags.Add( CustomTags.RoadVehicle );
 	}
 
 	public override void ClientSpawn()

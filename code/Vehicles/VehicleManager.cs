@@ -14,7 +14,7 @@ public partial class VehicleManager : Entity
 {
 	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( VehicleManager ) );
 
-	[Net] public List<VehicleGroup> VehicleGroups { get; private set; }
+	[Net] public IList<VehicleGroup> VehicleGroups { get; private set; }
 
 	public override void Spawn()
 	{
@@ -90,7 +90,8 @@ public partial class VehicleManager : Entity
 		if ( Game.IsServer && ResourceLibrary.TryGet( vehicleDefinitionPath, out BaseVehicleDefinition vehicleDefinition ) ) 
 		{
 			var vehicleGroup = TycoonGame.Instance.VehicleManager.CreateVehicleGroup( vehicleDefinition );
-			TycoonGame.Instance.VehicleManager.DeployVehicleGroup( vehicleGroup, player.InputHoveredWorldPosition, new Rotation() ); 
+			var position = new Vector3( player.InputHoveredWorldPosition, 200f );
+			TycoonGame.Instance.VehicleManager.DeployVehicleGroup( vehicleGroup, position, Rotation.FromYaw(90f) ); 
 		}
 	}
 }

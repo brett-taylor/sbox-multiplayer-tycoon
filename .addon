@@ -30,7 +30,8 @@
         "trigger": "Trigger",
         "ladder": "Ignore",
         "water": "Trigger",
-        "vehicle": "Unset"
+        "ground": "Unset",
+        "roadvehicle": "Collide"
       },
       "Pairs": [
         {
@@ -57,13 +58,23 @@
           "b": "trigger"
         },
         {
+          "a": "ground",
+          "b": "roadvehicle",
+          "r": "Collide"
+        },
+        {
           "a": "solid",
-          "b": "vehicle"
+          "b": "roadvehicle",
+          "r": "Collide"
         },
         {
           "a": "trigger",
-          "b": "vehicle",
-          "r": "Trigger"
+          "b": "roadvehicle"
+        },
+        {
+          "a": "water",
+          "b": "roadvehicle",
+          "r": "Ignore"
         }
       ]
     }

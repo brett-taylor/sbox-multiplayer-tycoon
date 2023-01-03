@@ -1,9 +1,13 @@
 ﻿using Sandbox;
+using TycoonGame.Utilities.Enumertion;
+using TycoonGame.World;
 
 namespace TycoonGame.Player;
 
 public partial class Player
 {
+	private static readonly float RAYCAST_DISTANCE = 50_000f;
+
 	[Net]
 	public Entity SelectedEntity { get; private set; }
 
@@ -11,7 +15,7 @@ public partial class Player
 	public Vector2 InputCursorPosition { get; private set; }
 
 	[ClientInput]
-	public Vector2 InputHoveredWorldPosition { get; private set; }
+	public Vector2 InputHoveredWorldPosition { get; set; }
 
 	[ClientInput]
 	public Entity InputHoveredEntity { get; private set; }
@@ -47,6 +51,14 @@ public partial class Player
 			SelectedEntityOnClient( To.Single( this ), newSelectedEntity.NetworkIdent );
 			SelectedEntity = newSelectedEntity;
 		}
+	}
+
+	public WorldCell GetHoveredWorldCell()
+	{
+		if ( InputHoveredWorldPosition == new Vector2( -1f, -1f ) )
+			return null;
+
+		return TycoonGame.Instance.WorldManager.GetWorldCellFromWorldPosition( InputHoveredWorldPosition );
 	}
 
 	private void UpdateHoveredEntity()
@@ -95,8 +107,8 @@ public partial class Player
 		Game.AssertClient();
 
 		var ray = new Ray( Camera.Position, Screen.GetDirection( InputCursorPosition ) );
-		var result = Trace.Ray( ray, 50_000f ).Run();
-		return result.Hit ? new Vector2( result.EndPosition ) : Vector2.Zero;
+		var result = Trace.Ray( ray, RAYCAST_DISTANCE ).IncludeClientside().WithTag(CustomTags.World).Run();
+		return result.Hit ? new Vector2( result.EndPosition ) : new Vector2(-1f, -1f);
 	}
 
 	private Entity GetHoveredEntity()
@@ -104,7 +116,7 @@ public partial class Player
 		Game.AssertClient();
 
 		var ray = new Ray( Camera.Position, Screen.GetDirection( InputCursorPosition ) );
-		var result = Trace.Ray( ray, 50_000f ).EntitiesOnly().Run();
+		var result = Trace.Ray( ray, RAYCAST_DISTANCE ).EntitiesOnly().Run();
 		return result.Hit ? result.Entity : null;
 	}
 

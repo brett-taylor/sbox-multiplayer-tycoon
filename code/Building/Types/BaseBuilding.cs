@@ -34,17 +34,8 @@ public abstract class BaseBuilding : ModelEntity
 		}
 	}
 
-	public void SetTilePosition( Vector2 tilePosition )
+	public void SetPosition( WorldCell worldCell )
 	{
-		var offset = (BuildingDefinition.BuildingGridSize - Vector2.One) / 2;
-		var offsetTilePosition = tilePosition - offset;
-
-		Vector3 position = new Vector3(
-			offsetTilePosition.x * WorldManager.TILE_SIZE_IN_UNITS.x + ( WorldManager.TILE_SIZE_IN_UNITS.x / 2),
-			offsetTilePosition.y * WorldManager.TILE_SIZE_IN_UNITS.y + (WorldManager.TILE_SIZE_IN_UNITS.y / 2),
-			1f
-		);
-
-		Position = position;
+		Position = worldCell.CenterTilePosition();
 	}
 }

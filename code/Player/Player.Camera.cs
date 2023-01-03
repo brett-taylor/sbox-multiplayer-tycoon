@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System.ComponentModel;
 
 namespace TycoonGame.Player;
 
@@ -7,16 +6,13 @@ public partial class Player
 {
 	private static bool DEBUG_CAMERA = false;
 
-	[EditorBrowsable]
-	private float MinCameraHeight { get; set; } = 500f;
-	
-	[EditorBrowsable]
-	private float MaxCameraHeight { get; set; } = 8000f;
+	private float MinCameraHeight { get; set; } = 500f;	
+	private float MaxCameraHeight { get; set; } = 10_000f;
 	private float CameraPitch { get; set; } = 45f;
 	private float Fov { get; set; } = 30f;
-	private float PanSpeed { get; set; } = 2f;
+	private float PanSpeed { get; set; } = 10f;
 	private float PanLerpTime { get; set; } = 5f;
-	private float RotateSpeed { get; set; } = -0.025f;
+	private float RotateSpeed { get; set; } = -0.0125f;
 	private float RotateLerpTime { get; set; } = 10f;
 	private float ZoomSpeed { get; set; } = -0.05f;
 	private float ZoomLerpTime { get; set; } = 10f;
@@ -24,13 +20,13 @@ public partial class Player
 	private float ZFar { get; set; } = 25_000f;
 
 	private Vector3 CurrentLookPosition { get; set; }
-	private Vector3 TargetLookPosition { get; set; } = new Vector3( 400f, 400f, 0f );
+	public Vector3 TargetLookPosition { get; set; }
 
 	private float CurrentCameraYaw { get; set; }
 	private float TargetCameraYaw { get; set; } = 45f;
 
 	private float CurrentCameraZoom { get; set; }
-	private float TargetCameraZoom { get; set; } = 0.5f;
+	private float TargetCameraZoom { get; set; } = 1f;
 
 	private Vector3? DragStartPosition { get; set; }
 
@@ -43,6 +39,7 @@ public partial class Player
 
 	private void UpdateCamera()
 	{
+		Camera.Main.EnablePostProcessing = false;
 		Camera.FieldOfView = Fov;
 		Camera.ZNear = ZNear;
 		Camera.ZFar = ZFar;

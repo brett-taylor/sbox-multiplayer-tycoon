@@ -84,22 +84,20 @@ public partial class BuildingController : Entity
 			return;
 		}
 
-		var hoveredPosition = ( Owner as Player.Player).InputHoveredWorldPosition;
-		if ( hoveredPosition == null )
-		{
-			BuildingGridDisplay.EnableDrawing = false;
-			GhostBuilding.EnableDrawing = false;
-			return;
-		}
-
 		using (Prediction.Off())
 		{
-			var hoveredTile = WorldManager.GetTileFromWorldPosition( hoveredPosition );
+			var hoveredWorldCell = (Owner as Player.Player).GetHoveredWorldCell();
+			if ( hoveredWorldCell == null )
+			{
+				BuildingGridDisplay.EnableDrawing = false;
+				GhostBuilding.EnableDrawing = false;
+				return;
+			}
 
-			BuildingGridDisplay.SetTilePosition( hoveredTile );
+			BuildingGridDisplay.SetPosition( hoveredWorldCell );
 			BuildingGridDisplay.EnableDrawing = true;
 
-			GhostBuilding.SetTilePosition( hoveredTile );
+			GhostBuilding.SetPosition( hoveredWorldCell );
 			GhostBuilding.EnableDrawing = true;
 
 			if ( Input.Pressed( InputButton.Zoom ) || Input.Pressed( InputButton.Jump ) )
@@ -110,8 +108,7 @@ public partial class BuildingController : Entity
 
 			if ( Input.Pressed( InputButton.PrimaryAttack ) )
 			{
-				var tilePostion = new Vector2( hoveredTile.x, hoveredTile.y );
-				ConCmd_PlaceBuilding( tilePostion, GhostBuilding.Rotation );
+				ConCmd_PlaceBuilding( hoveredWorldCell.WorldCoordinate.X, hoveredWorldCell.WorldCoordinate.Y, GhostBuilding.Rotation );
 			}
 		}
 	}
@@ -121,7 +118,7 @@ public partial class BuildingController : Entity
 		BuildingDefinition = null;
 	}
 
-	private void PlaceBuilding(Vector2 tilePosition, Rotation rotation)
+	private void PlaceBuilding(WorldCell worldCell, Rotation rotation)
 	{
 		if ( !TycoonGame.Instance.CompanyManager.HasMoney( BuildingDefinition.BuildingPrice ) )
 		{
@@ -130,11 +127,8 @@ public partial class BuildingController : Entity
 		}
 
 		var deadzone = 50f;
-		var minX = WorldManager.TILE_SIZE_IN_UNITS.x * tilePosition.x;
-		var minY = WorldManager.TILE_SIZE_IN_UNITS.y * tilePosition.y;
-		var mins = new Vector3( minX + deadzone, minY + deadzone, -5f);
-		var maxs = new Vector3( minX + WorldManager.TILE_SIZE_IN_UNITS.x - deadzone, minY + WorldManager.TILE_SIZE_IN_UNITS.y - deadzone, 10f );
-		if ( FindInBox( new BBox( mins, maxs ) ).Where( entity => entity.Tags.Has( CustomTags.Building ) ).Any() )
+		var bboxToCheck = new BBox( worldCell.BottomLeftPosition() + deadzone, worldCell.TopRightPosition() - deadzone );
+		if ( FindInBox( bboxToCheck ).Where( entity => entity.Tags.Has( CustomTags.Building ) ).Any() )
 		{
 			LOGGER.Warning( "[TODO UI Popups] Building Collision" );
 			return;
@@ -144,7 +138,7 @@ public partial class BuildingController : Entity
 
 		var newBuildng = TypeLibrary.Create<BaseBuilding>( BuildingDefinition.BuildingArchetype );
 		newBuildng.SetBuildingDefinition( BuildingDefinition );
-		newBuildng.SetTilePosition( tilePosition );
+		newBuildng.SetPosition( worldCell );
 		newBuildng.Rotation = rotation;
 	}
 
@@ -164,7 +158,7 @@ public partial class BuildingController : Entity
 	}
 
 	[ConCmd.Server( "place_building" )]
-	public static void ConCmd_PlaceBuilding(Vector2 tilePosition, Rotation rotation)
+	public static void ConCmd_PlaceBuilding(int worldCoordinateX, int worldCoordinateY, Rotation rotation)
 	{
 		if ( ConsoleSystem.Caller == null || ConsoleSystem.Caller.Pawn is not Player.Player player )
 			return;
@@ -175,6 +169,10 @@ public partial class BuildingController : Entity
 			return;
 		}
 
-		player.BuildingController.PlaceBuilding( tilePosition, rotation );
+		var worldCell = TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( worldCoordinateX, worldCoordinateY ) );
+		if (worldCell != null)
+		{
+			player.BuildingController.PlaceBuilding( worldCell, rotation );
+		}
 	}
 }

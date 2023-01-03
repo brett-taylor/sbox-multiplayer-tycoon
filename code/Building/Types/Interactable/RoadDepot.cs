@@ -16,7 +16,7 @@ public partial class RoadDepot : InteractableBuilding
 	private static readonly string SPAWN_POINT_PREFIX = "spawnpoint";
 
 	[Net]
-	public List<VehicleGroup> StoredVehicles { get; set; } 
+	public IList<VehicleGroup> StoredVehicles { get; set; } 
 
 	private WindowManager.Window Window { get; set; }
 	private VehicleDepotStoreList VehicleDepotStoreList { get;set; }

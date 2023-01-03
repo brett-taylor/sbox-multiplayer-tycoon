@@ -7,7 +7,8 @@ namespace TycoonGame.Building.Core;
 public class BuildingGridDisplay : ModelEntity
 {
 	private static readonly float HEIGHT = 1f;
-	private static readonly Vector2 SIZE_IN_TILE = new Vector2( 9, 9 );
+	private static readonly float HEIGHT_OFFSET = 1f;
+	private static readonly WorldCoordinate SIZE_IN_CELLS = new WorldCoordinate( 9, 9 );
 
 	public override void Spawn()
 	{
@@ -20,8 +21,8 @@ public class BuildingGridDisplay : ModelEntity
 
 	private Model GetModel()
 	{
-		var actualSizeX = SIZE_IN_TILE.x * WorldManager.TILE_SIZE_IN_UNITS.x;
-		var actualSizeY = SIZE_IN_TILE.y * WorldManager.TILE_SIZE_IN_UNITS.y;
+		var actualSizeX = SIZE_IN_CELLS.X * WorldCell.WORLD_CELL_SIZE;
+		var actualSizeY = SIZE_IN_CELLS.Y * WorldCell.WORLD_CELL_SIZE;
 
 		var vb = new VertexBuffer();
 
@@ -38,17 +39,20 @@ public class BuildingGridDisplay : ModelEntity
 		return new ModelBuilder().AddMesh( mesh ).Create();
 	}
 
-	public void SetTilePosition( Vector2 tilePosition )
+	public void SetPosition( WorldCell worldCell )
 	{
-		var offset = (SIZE_IN_TILE - Vector2.One) / 2;
-		var offsetTilePosition = tilePosition - offset;
+		var offset = ( SIZE_IN_CELLS - 1 ) / 2;
+		var offsetTilePosition = worldCell.WorldCoordinate - offset;
+
+		var height = (worldCell.WorldHeight() * WorldCell.WORLD_CELL_HEIGHT) + HEIGHT_OFFSET;
 
 		Vector3 position = new Vector3(
-			offsetTilePosition.x * WorldManager.TILE_SIZE_IN_UNITS.x,
-			offsetTilePosition.y * WorldManager.TILE_SIZE_IN_UNITS.y,
-			1f
+			offsetTilePosition.X * WorldCell.WORLD_CELL_SIZE,
+			offsetTilePosition.Y * WorldCell.WORLD_CELL_SIZE,
+			height
 		);
 
 		Position = position;
 	}
 }
+
