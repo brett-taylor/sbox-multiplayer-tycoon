@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
+using TycoonGame.Utilities;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.Vehicles.Base;
 using TycoonGame.Vehicles.Definitions;
@@ -9,7 +10,7 @@ namespace TycoonGame.Vehicles.Water;
 [Category( "Vehicles/WaterVehicles" )]
 public partial class WaterVehicleEntity : BaseVehicleEntity
 {
-	private static readonly Logger LOGGER = new Logger( typeof( WaterVehicleEntity ).Name );
+	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( WaterVehicleEntity ) );
 
 	public WaterVehicleDefinition WaterVehicleDefinition => VehicleDefinition as WaterVehicleDefinition;
 

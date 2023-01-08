@@ -1,9 +1,8 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
-using System.Linq;
 using TycoonGame.Building.Archetypes;
+using TycoonGame.Building.Restrictions;
 using TycoonGame.Utilities;
-using TycoonGame.Utilities.Enumertion;
 using TycoonGame.World;
 
 namespace TycoonGame.Building.Placement;
@@ -14,6 +13,9 @@ public class FixedSizePlacementController : PlacementController
 
 	private FixedSizePlacementGhost FixedSizePlacementGhostClient { get; set; }
 	private GridDisplay GridDisplayClient { get; set; }
+
+	private WorldCell LastHoveredWorldCell = null;
+	private bool IsCurrentlyValid = false;
 
 	public FixedSizePlacementController( BuildingDefinition buildingDefinition ) : base( buildingDefinition )
 	{
@@ -60,11 +62,18 @@ public class FixedSizePlacementController : PlacementController
 			return;
 		}
 
+		if (LastHoveredWorldCell != hoveredWorldCell)
+		{
+			IsCurrentlyValid = BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, hoveredWorldCell, out BuildingRestriction ignored );
+		}
+
 		FixedSizePlacementGhostClient.SetPosition( hoveredWorldCell );
 		FixedSizePlacementGhostClient.EnableDrawing = true;
-
+		
 		GridDisplayClient.SetPosition( hoveredWorldCell );
 		GridDisplayClient.EnableDrawing = true;
+
+		DebugOverlay.Box( FixedSizePlacementGhostClient.WorldSpaceBounds, IsCurrentlyValid ? Color.Green : Color.Red, 0f );
 
 		if ( Input.Pressed( InputButton.Zoom ) || Input.Pressed( InputButton.Jump ) )
 		{
@@ -76,6 +85,8 @@ public class FixedSizePlacementController : PlacementController
 		{
 			BuildingController.ConCmd_PlaceBuilding( SerializePlacementString( hoveredWorldCell, FixedSizePlacementGhostClient.Rotation.Yaw() ) );
 		}
+
+		LastHoveredWorldCell = hoveredWorldCell;
 	}
 
 	public override void PlaceBuilding( string data )
@@ -92,6 +103,12 @@ public class FixedSizePlacementController : PlacementController
 		if ( !TycoonGame.Instance.CompanyManager.HasMoney( BuildingDefinition.Price ) )
 		{
 			LOGGER.Warning( "[TODO UI Popups] No Money" );
+			return;
+		}
+
+		if (!BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, worldCell, out BuildingRestriction buildingRestriction ))
+		{
+			LOGGER.Warning( $"[TODO UI Popups] Failed a restriction: { buildingRestriction.LastFailedReason }" );
 			return;
 		}
 

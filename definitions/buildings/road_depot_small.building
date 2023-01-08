@@ -12,5 +12,10 @@
 			Y = 1
 		}
 		Price = 2000
+		Restrictions = 
+		[
+			"IS_ON_GROUND",
+			"NO_BUILDING_ON_WORLD_CELL",
+		]
 	}
 }

@@ -2,6 +2,7 @@
 using Sandbox.Component;
 using Sandbox.Diagnostics;
 using TycoonGame.Player;
+using TycoonGame.Utilities;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.Vehicles.Definitions;
 
@@ -9,7 +10,7 @@ namespace TycoonGame.Vehicles.Base;
 
 public abstract partial class BaseVehicleEntity : Prop, IInteractableEntity
 {
-	private static readonly Logger LOGGER = new Logger( typeof( BaseVehicleEntity ).Name );
+	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( BaseVehicleEntity ) );
 
 	private static readonly Color GLOW_COLOR_SELECTABLE = Color.Green;
 	private static readonly Color GLOW_COLOR_UNSELECTABLE = Color.Red;

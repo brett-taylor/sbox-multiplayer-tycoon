@@ -16,6 +16,9 @@ public class GridDisplay : ModelEntity
 		Game.AssertClient();
 
 		Transmit = TransmitType.Never;
+		EnableLagCompensation = false;
+		Predictable = false;
+
 		Model = GetModel();
 	}
 

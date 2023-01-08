@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
+using TycoonGame.Utilities;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.Vehicles.Base;
 using TycoonGame.Vehicles.Definitions;
@@ -9,7 +10,7 @@ namespace TycoonGame.Vehicles.Road;
 [Category( "Vehicles/RoadVehicles" )]
 public partial class RoadVehicleEntity : BaseVehicleEntity
 {
-	private static readonly Logger LOGGER = new Logger( typeof( RoadVehicleEntity ).Name );
+	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( RoadVehicleEntity ) );
 
 	public RoadVehicleDefinition RoadVehicleDefinition => VehicleDefinition as RoadVehicleDefinition;
 

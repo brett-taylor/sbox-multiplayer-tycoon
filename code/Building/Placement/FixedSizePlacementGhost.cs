@@ -12,5 +12,7 @@ public class FixedSizePlacementGhost : BaseBuilding
 		Game.AssertClient();
 
 		Transmit = TransmitType.Never;
+		EnableLagCompensation = false;
+		Predictable = false;
 	}
 }

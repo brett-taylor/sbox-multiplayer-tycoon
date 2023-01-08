@@ -92,7 +92,7 @@ public partial class BuildingController : Entity
 	{
 		var placementController = buildingDefinition.PlacementType switch
 		{
-			BuildingPlacementType.FIXED_SIZE => new FixedSizePlacementController( buildingDefinition ),
+			PlacementType.FIXED_SIZE => new FixedSizePlacementController( buildingDefinition ),
 			_ => throw new System.Exception( $"{buildingDefinition.ResourcePath} does not have a placement type set." )
 		};
 

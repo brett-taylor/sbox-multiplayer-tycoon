@@ -1,4 +1,7 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
+using TycoonGame.Building.Placement;
+using TycoonGame.Building.Restrictions;
 using TycoonGame.World;
 
 namespace TycoonGame.Building;
@@ -10,7 +13,7 @@ public partial class BuildingDefinition : GameResource
 
 	public string Archetype { get; set; }
 
-	public BuildingPlacementType PlacementType { get; set; }
+	public PlacementType PlacementType { get; set; }
 
 	[ResourceType( "vmdl" )]
 	public string ModelPath { get; set; }
@@ -18,4 +21,6 @@ public partial class BuildingDefinition : GameResource
 	public WorldCoordinate Size => new WorldCoordinate( 1, 1 );
 
 	public int Price { get; set; }
+
+	public List<BuildingRestrictionType> Restrictions { get; set; }
 }
