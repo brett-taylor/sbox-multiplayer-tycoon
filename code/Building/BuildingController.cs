@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
+using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Placement;
 using TycoonGame.Utilities;
 

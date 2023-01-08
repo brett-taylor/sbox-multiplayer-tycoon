@@ -3,7 +3,7 @@
 	data = 
 	{
 		Name = "Water Depot (Small)"
-		Archetype = "TycoonGame.Building.Archetypes.Interactable.RoadDepot"
+		Archetype = "TycoonGame.Building.Archetypes.VehicleDepot"
 		PlacementType = "FIXED_SIZE"
 		ModelPath = resource:"models/buildings/road_depot/small_depot.vmdl"
 		Size = 
@@ -17,5 +17,9 @@
 			"IS_ON_WATER",
 			"NO_BUILDING_ON_WORLD_CELL",
 		]
+		Properties = 
+		{
+			VehicleGroupType = "WATER"
+		}
 	}
 }

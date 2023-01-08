@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
 using TycoonGame.Building.Archetypes;
+using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions;
 using TycoonGame.Utilities;
 using TycoonGame.World;
@@ -69,7 +70,7 @@ public class FixedSizePlacementController : PlacementController
 
 		FixedSizePlacementGhostClient.SetPosition( hoveredWorldCell );
 		FixedSizePlacementGhostClient.EnableDrawing = true;
-		
+
 		GridDisplayClient.SetPosition( hoveredWorldCell );
 		GridDisplayClient.EnableDrawing = true;
 

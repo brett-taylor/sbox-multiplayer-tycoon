@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System.Linq;
+using TycoonGame.Building.Definitions;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.World;
 
@@ -16,7 +17,7 @@ public class NoBuildingOnWorldCellRestriction : BuildingRestriction
 	public override bool Valid( BuildingDefinition buildingDefinition, WorldCell worldCell )
 	{
 		var mins = new Vector3( worldCell.BottomLeftPosition().x + BBOX_DEADZONE, worldCell.BottomLeftPosition().y + BBOX_DEADZONE, 0f );
-		var maxs = new Vector3( worldCell.TopRightPosition().x + BBOX_DEADZONE, worldCell.TopRightPosition().y + BBOX_DEADZONE, 50f );
+		var maxs = new Vector3( worldCell.TopRightPosition().x - BBOX_DEADZONE, worldCell.TopRightPosition().y - BBOX_DEADZONE, 50f );
 		var bboxToCheck = new BBox( mins, maxs );
 		var entities = Entity.FindInBox( bboxToCheck ).Where( entity => entity.Tags.Has( CustomTags.Building ) ).ToList();
 

@@ -1,4 +1,4 @@
-﻿using TycoonGame.Building;
+﻿using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions;
 using TycoonGame.World;
 

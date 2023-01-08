@@ -2,6 +2,7 @@
 using Sandbox.Building.Restrictions.Impl;
 using System.Collections.Generic;
 using System.Linq;
+using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions.Impl;
 using TycoonGame.World;
 

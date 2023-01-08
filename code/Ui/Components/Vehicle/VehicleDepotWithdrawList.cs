@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System;
-using TycoonGame.Building.Archetypes.Interactable;
+using TycoonGame.Building.Archetypes;
 using TycoonGame.Vehicles;
 
 public partial class VehicleDepotWithdrawList
 {
-	public RoadDepot RoadDepot { get; set; }
+	public VehicleDepot VehicleDepot { get; set; }
 	public IList<VehicleGroup> StoredVehicles { get; set; } = new List<VehicleGroup>();
 
 	protected override int BuildHash()
@@ -15,7 +15,7 @@ public partial class VehicleDepotWithdrawList
 
 	private void WithdrawVehicle( VehicleGroup vehicleGroup )
 	{
-		RoadDepot.Concmd_WithdrawVehicle( RoadDepot.NetworkIdent, vehicleGroup.NetworkIdent );
+		VehicleDepot.Concmd_WithdrawVehicle( VehicleDepot.NetworkIdent, vehicleGroup.NetworkIdent );
 		StateHasChanged();
 	}
 }

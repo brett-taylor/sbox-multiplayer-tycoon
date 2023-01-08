@@ -3,23 +3,46 @@ using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TycoonGame.Building.Definitions;
 using TycoonGame.Utilities;
 using TycoonGame.Vehicles;
 using TycoonGame.Vehicles.Definitions;
 
-namespace TycoonGame.Building.Archetypes.Interactable;
+namespace TycoonGame.Building.Archetypes;
 
 [Category( "Buildings/Maintenance" )]
-public partial class RoadDepot : InteractableBuilding
+public partial class VehicleDepot : BaseBuilding
 {
-	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( RoadDepot ) );
+	private static readonly Logger LOGGER = LoggerUtils.CreateLogger( typeof( VehicleDepot ) );
 	private static readonly string SPAWN_POINT_PREFIX = "spawnpoint";
+
+	private static readonly string PROPERTY_VEHICLE_GROUP_TYPE_KEY = "VehicleGroupType";
 
 	[Net]
 	public IList<VehicleGroup> StoredVehicles { get; set; } 
 
 	private WindowManager.Window Window { get; set; }
 	private VehicleDepotStoreList VehicleDepotStoreList { get;set; }
+
+	public override void SetBuildingDefinition( BuildingDefinition buildingDefinition )
+	{
+		if (!buildingDefinition.Properties.ContainsKey(PROPERTY_VEHICLE_GROUP_TYPE_KEY))
+		{
+			LOGGER.Error( $"Vehicle Depot expects a { PROPERTY_VEHICLE_GROUP_TYPE_KEY } property" );
+			return;
+		}
+		else
+		{
+			var value = buildingDefinition.Properties[PROPERTY_VEHICLE_GROUP_TYPE_KEY];
+			if (!Enum.TryParse<VehicleGroupType>(value, true, out VehicleGroupType vehicleGroupType))
+			{
+				LOGGER.Error( $"Vehicle Depot expects the {PROPERTY_VEHICLE_GROUP_TYPE_KEY} property to be a valid VehicleGroupType enum" );
+				return;
+			}
+		}
+
+		base.SetBuildingDefinition( buildingDefinition );
+	}
 
 	public override void Selected( Player.Player player )
 	{
@@ -31,16 +54,17 @@ public partial class RoadDepot : InteractableBuilding
 			Window.WindowFrame.OnClose += CloseWindow;
 
 			VehicleDepotStoreList = new VehicleDepotStoreList();
-			VehicleDepotStoreList.RoadDepot = this;
+			VehicleDepotStoreList.VehicleDepot = this;
 			Window.WindowFrame.AddTab( "Store Vehicle", VehicleDepotStoreList );
 
 			var vehicleDepotWithdrawList = new VehicleDepotWithdrawList();
-			vehicleDepotWithdrawList.RoadDepot = this;
+			vehicleDepotWithdrawList.VehicleDepot = this;
 			vehicleDepotWithdrawList.StoredVehicles = StoredVehicles;
 			Window.WindowFrame.AddTab( "Withdraw Vehicle", vehicleDepotWithdrawList );
 
 			var vehicleBuyList = new VehicleBuyList();
 			vehicleBuyList.RoadDepot = this;
+			vehicleBuyList.VehicleType = GetVehicleGroupType();
 			Window.WindowFrame.AddTab( "New Vehicle", vehicleBuyList );
 		}
 	}
@@ -50,7 +74,10 @@ public partial class RoadDepot : InteractableBuilding
 	{
 		if (VehicleDepotStoreList != null)
 		{
-			VehicleDepotStoreList.StorableVehicles = TycoonGame.Instance.VehicleManager.VehicleGroups.Where( vg => vg.IsDeployed() ).ToList();
+			VehicleDepotStoreList.StorableVehicles = TycoonGame.Instance.VehicleManager.VehicleGroups
+				.Where( vg => vg.IsDeployed() )
+				.Where( vg => GetVehicleGroupType() == vg.VehicleDefinition.Type )
+				.ToList();
 		}
 	}
 
@@ -69,10 +96,15 @@ public partial class RoadDepot : InteractableBuilding
 			.ToList();
 	}
 
+	private VehicleGroupType GetVehicleGroupType()
+	{
+		return Enum.Parse<VehicleGroupType>( BuildingDefinition.Properties[PROPERTY_VEHICLE_GROUP_TYPE_KEY], true );
+	}
+
 	[ConCmd.Server]
 	public static void Concmd_StoreVehicle( int roadDepotNetworkInt, int vehicleGroupNetworkIdent )
 	{
-		var roadDepot = FindByIndex<RoadDepot>( roadDepotNetworkInt );
+		var roadDepot = FindByIndex<VehicleDepot>( roadDepotNetworkInt );
 		var vehicleGroup = FindByIndex<VehicleGroup>( vehicleGroupNetworkIdent );
 
 		if ( roadDepot != null && vehicleGroup != null )
@@ -85,7 +117,7 @@ public partial class RoadDepot : InteractableBuilding
 	[ConCmd.Server]
 	public static void Concmd_WithdrawVehicle( int roadDepotNetworkInt, int vehicleGroupNetworkIdent )
 	{
-		var roadDepot = FindByIndex<RoadDepot>( roadDepotNetworkInt );
+		var roadDepot = FindByIndex<VehicleDepot>( roadDepotNetworkInt );
 		var vehicleGroup = FindByIndex<VehicleGroup>( vehicleGroupNetworkIdent );
 
 		if ( roadDepot != null && vehicleGroup != null )
@@ -103,7 +135,7 @@ public partial class RoadDepot : InteractableBuilding
 	[ConCmd.Server]
 	public static void Concmd_BuyVehicle( int roadDepotNetworkInt, int vehicleDefinitionId )
 	{
-		var roadDepot = FindByIndex<RoadDepot>( roadDepotNetworkInt );
+		var roadDepot = FindByIndex<VehicleDepot>( roadDepotNetworkInt );
 		var vehicleDefinition = ResourceLibrary.Get<BaseVehicleDefinition>( vehicleDefinitionId );
 
 		if ( roadDepot == null || vehicleDefinition == null )

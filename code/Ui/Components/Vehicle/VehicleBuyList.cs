@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TycoonGame.Building.Archetypes.Interactable;
+using TycoonGame.Building.Archetypes;
 using TycoonGame.Vehicles;
 using TycoonGame.Vehicles.Definitions;
 
 public partial class VehicleBuyList
 {
-	public RoadDepot RoadDepot { get; set; }
-	public List<BaseVehicleDefinition> BuyableVehicles { get; set; } = new List<BaseVehicleDefinition>();
+	public VehicleDepot RoadDepot { get; set; }
+	public VehicleGroupType VehicleType { get; set; }
+
+	private List<BaseVehicleDefinition> BuyableVehicles { get; set; } = new List<BaseVehicleDefinition>();
 
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
@@ -16,7 +18,10 @@ public partial class VehicleBuyList
 
 		if (firstTime)
 		{
-			BuyableVehicles = ResourceLibrary.GetAll<BaseVehicleDefinition>().ToList();
+			BuyableVehicles = ResourceLibrary
+				.GetAll<BaseVehicleDefinition>()
+				.Where( bvd => VehicleType == bvd.Type )
+				.ToList();
 		}
 	}
 
@@ -27,7 +32,7 @@ public partial class VehicleBuyList
 
 	private void BuyVehicle( BaseVehicleDefinition vehicleDefinition )
 	{
-		RoadDepot.Concmd_BuyVehicle( RoadDepot.NetworkIdent, vehicleDefinition.ResourceId );
+		VehicleDepot.Concmd_BuyVehicle( RoadDepot.NetworkIdent, vehicleDefinition.ResourceId );
 		StateHasChanged();
 	}
 }

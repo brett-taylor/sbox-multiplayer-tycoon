@@ -41,12 +41,9 @@ public partial class VehicleManager : Entity
 	{
 		LOGGER.Info( $"Creating Vehicle Group with definition {vehicleDefinition.ResourcePath}" );
 
-		var vehicleMember = new VehicleGroupMember();
-		vehicleMember.VehicleDefinition = vehicleDefinition;
-
 		var vehicleGroup = new VehicleGroup();
 		vehicleGroup.Name = $"{vehicleDefinition.Name}";
-		vehicleGroup.VehicleGroupMember = vehicleMember;
+		vehicleGroup.VehicleDefinition = vehicleDefinition;
 
 		VehicleGroups.Add( vehicleGroup );
 
@@ -57,8 +54,8 @@ public partial class VehicleManager : Entity
 	{
 		LOGGER.Info( $"Deploying Vehicle Group {vehicleGroup.Name}" );
 
-		var newVehicleEntity = TypeLibrary.Create<BaseVehicleEntity>( vehicleGroup.VehicleGroupMember.VehicleDefinition.EntityTypeName );
-		newVehicleEntity.SetVehicleDefinition( vehicleGroup.VehicleGroupMember.VehicleDefinition );
+		var newVehicleEntity = TypeLibrary.Create<BaseVehicleEntity>( vehicleGroup.VehicleDefinition.EntityTypeName );
+		newVehicleEntity.SetVehicleDefinition( vehicleGroup.VehicleDefinition );
 		newVehicleEntity.Position = position;
 		newVehicleEntity.Rotation = rotation;
 

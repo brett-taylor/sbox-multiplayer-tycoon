@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
+using TycoonGame.Building.Definitions;
 
 namespace TycoonGame.Building.Placement;
 

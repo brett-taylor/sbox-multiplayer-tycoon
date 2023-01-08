@@ -12,4 +12,6 @@ public abstract class BaseVehicleDefinition : GameResource
 	public string ModelPath { get; set; }
 
 	public int Price { get; set; }
+
+	public VehicleGroupType Type { get; set; }
 }

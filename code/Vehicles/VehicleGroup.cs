@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using TycoonGame.Vehicles.Definitions;
 
 namespace TycoonGame.Vehicles;
 
@@ -6,7 +7,7 @@ namespace TycoonGame.Vehicles;
 public partial class VehicleGroup : Entity
 {
 	[Net]
-	public VehicleGroupMember VehicleGroupMember { get; set; }
+	public BaseVehicleDefinition VehicleDefinition { get; set; }
 
 	[Net]
 	public Entity DeployedEntity { get; set; }

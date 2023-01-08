@@ -7,5 +7,6 @@
 		Name = "Ship I"
 		ModelPath = resource:"models/vehicles/ship_i/ship_i.vmdl"
 		Price = 10000
+		Type = "WATER"
 	}
 }

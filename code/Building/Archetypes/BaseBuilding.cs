@@ -1,12 +1,21 @@
 ﻿using Sandbox;
+using Sandbox.Component;
+using TycoonGame.Building.Definitions;
+using TycoonGame.Player;
+using TycoonGame.Utilities;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.World;
 
 namespace TycoonGame.Building.Archetypes;
 
-public abstract class BaseBuilding : ModelEntity
+public abstract partial class BaseBuilding : ModelEntity, IInteractableEntity
 {
+	private static readonly Color GLOW_COLOR = new Color32( 150, 182, 216 );
+
+	[Net]
 	public BuildingDefinition BuildingDefinition { get; private set; }
+
+	public virtual bool IsSelectable => true;
 
 	public override void Spawn()
 	{
@@ -19,11 +28,9 @@ public abstract class BaseBuilding : ModelEntity
 	}
 
 	public virtual void SetBuildingDefinition(BuildingDefinition buildingDefinition)
-	{
-		BuildingDefinition = buildingDefinition;
-		
+	{		
 		if (buildingDefinition.ModelPath != null) {
-			Name = BuildingDefinition.Name;
+			Name = buildingDefinition.Name;
 			Model = Model.Load(buildingDefinition.ModelPath);
 			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 
@@ -31,10 +38,38 @@ public abstract class BaseBuilding : ModelEntity
 			EnableShadowCasting = false;
 			EnableTraceAndQueries = true;
 		}
+
+		BuildingDefinition = buildingDefinition;
 	}
 
 	public void SetPosition( WorldCell worldCell )
 	{
 		Position = worldCell.CenterTilePosition();
+	}
+
+	public virtual bool CanSelect( Player.Player player )
+	{
+		return true;
+	}
+
+	public virtual void Selected( Player.Player player )
+	{
+	}
+
+	public virtual void Unselected( Player.Player player )
+	{
+	}
+
+	public virtual void Hovered( Player.Player player )
+	{
+		var glow = Components.GetOrCreate<Glow>();
+		glow.Enabled = true;
+		glow.Width = 0.5f;
+		glow.Color = GLOW_COLOR;
+	}
+
+	public virtual void Unhovered( Player.Player player )
+	{
+		Components.GetOrCreate<Glow>().Enabled = false;
 	}
 }
