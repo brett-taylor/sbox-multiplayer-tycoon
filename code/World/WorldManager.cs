@@ -11,10 +11,10 @@ public partial class WorldManager : Entity
 	private static readonly Logger LOGGER =  LoggerUtils.CreateLogger( typeof( WorldManager ) );
 
 	[Net]
-	public bool DebugWorldServer { get; set; }
+	public bool DebugWorldWaterServer { get; set; }
 
 	[Net]
-	public bool DebugWorldClient { get; set; }
+	public bool DebugWorldWaterClient { get; set; }
 
 	public WorldCoordinate WorldSize { get; private set; }
 
@@ -23,6 +23,7 @@ public partial class WorldManager : Entity
 	public WorldCell[,] WorldCells { get; private set; }
 
 	public WorldGroundEntity WorldGroundEntity { get; private set; }
+	
 	public WorldWaterEntity WorldWaterEntity { get; private set; }
 
 	public override void Spawn()
@@ -123,39 +124,5 @@ public partial class WorldManager : Entity
 		worldBedrock.Owner = Game.LocalPawn;
 
 		return worldBedrock;
-	}
-
-	[Event.Tick.Client]
-	private void TickClient()
-	{
-		if ( !DebugWorldClient )
-			return;
-
-		for ( var x = 0; x < WorldSize.X; x++ )
-		{
-			for ( var y = 0; y < WorldSize.Y; y++ )
-			{
-				var color = WorldCells[x, y].IsWater ? Color.Blue : Color.Green;
-				DebugOverlay.Box( WorldCells[x, y].BoundingBox().Mins, WorldCells[x, y].BoundingBox().Maxs, color, 0f, false );
-				DebugOverlay.Sphere( WorldCells[x, y].CenterTilePosition(), 10f, color, 0f, false );
-			}
-		}
-	}
-
-	[Event.Tick.Server]
-	private void TickServer()
-	{
-		if ( !DebugWorldServer)
-			return;
-
-		for ( var x = 0; x < WorldSize.X; x++ )
-		{
-			for ( var y = 0; y < WorldSize.Y; y++ )
-			{
-				var color = WorldCells[x, y].IsWater ? Color.Blue : Color.Green;
-				DebugOverlay.Box( WorldCells[x, y].BoundingBox().Mins, WorldCells[x, y].BoundingBox().Maxs, color, 0f, false );
-				DebugOverlay.Sphere( WorldCells[x, y].CenterTilePosition(), 10f, color, 0f, false );
-			}
-		}
 	}
 }

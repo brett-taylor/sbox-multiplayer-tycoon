@@ -2,10 +2,9 @@
 using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
-using TycoonGame.Building.Core;
 using TycoonGame.Utilities;
+using TycoonGame.Vehicles.Base;
 using TycoonGame.Vehicles.Definitions;
-using TycoonGame.Vehicles.Road;
 
 namespace TycoonGame.Vehicles;
 
@@ -58,14 +57,12 @@ public partial class VehicleManager : Entity
 	{
 		LOGGER.Info( $"Deploying Vehicle Group {vehicleGroup.Name}" );
 
-		var roadVehicleEntity = new RoadVehicleEntity();	
-		roadVehicleEntity.Spawn();
+		var newVehicleEntity = TypeLibrary.Create<BaseVehicleEntity>( vehicleGroup.VehicleGroupMember.VehicleDefinition.EntityTypeName );
+		newVehicleEntity.SetVehicleDefinition( vehicleGroup.VehicleGroupMember.VehicleDefinition );
+		newVehicleEntity.Position = position;
+		newVehicleEntity.Rotation = rotation;
 
-		roadVehicleEntity.SetVehicleDefinition( vehicleGroup.VehicleGroupMember.VehicleDefinition as RoadVehicleDefinition );
-		roadVehicleEntity.Position = position;
-		roadVehicleEntity.Rotation = rotation;
-
-		vehicleGroup.DeployedEntity = roadVehicleEntity;
+		vehicleGroup.DeployedEntity = newVehicleEntity;
 	}
 
 	public void StoreVehicleGroup( VehicleGroup vehicleGroup )
@@ -82,16 +79,20 @@ public partial class VehicleManager : Entity
 	[ConCmd.Admin( "create_vehicle" )]
 	private static void ConCmd_CreateVehicle( string vehicleDefinitionPath )
 	{
-		if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Player.Player player )
+		if ( ConsoleSystem.Caller is null || ConsoleSystem.Caller.Pawn is not Player.Player player || !Game.IsServer )
 		{
 			return;
 		}
 
-		if ( Game.IsServer && ResourceLibrary.TryGet( vehicleDefinitionPath, out BaseVehicleDefinition vehicleDefinition ) ) 
+		if ( ResourceLibrary.TryGet( vehicleDefinitionPath, out BaseVehicleDefinition vehicleDefinition ) ) 
 		{
 			var vehicleGroup = TycoonGame.Instance.VehicleManager.CreateVehicleGroup( vehicleDefinition );
 			var position = new Vector3( player.InputHoveredWorldPosition, 200f );
 			TycoonGame.Instance.VehicleManager.DeployVehicleGroup( vehicleGroup, position, Rotation.FromYaw(90f) ); 
+		} 
+		else
+		{
+			LOGGER.Warning( $"Attempted create vehicle command with invalid vehicle definition path: {vehicleDefinitionPath}" );
 		}
 	}
 }

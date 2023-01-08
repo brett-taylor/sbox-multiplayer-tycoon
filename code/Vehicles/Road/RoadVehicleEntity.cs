@@ -1,32 +1,22 @@
 ﻿using Sandbox;
-using Sandbox.Component;
 using Sandbox.Diagnostics;
-using TycoonGame.Player;
 using TycoonGame.Utilities.Enumertion;
+using TycoonGame.Vehicles.Base;
 using TycoonGame.Vehicles.Definitions;
 
 namespace TycoonGame.Vehicles.Road;
 
 [Category( "Vehicles/RoadVehicles" )]
-public partial class RoadVehicleEntity : Prop, IInteractableEntity
+public partial class RoadVehicleEntity : BaseVehicleEntity
 {
 	private static readonly Logger LOGGER = new Logger( typeof( RoadVehicleEntity ).Name );
 
-	private static readonly Color GLOW_COLOR_SELECTABLE = Color.Green;
-	private static readonly Color GLOW_COLOR_UNSELECTABLE = Color.Red;
-	private static readonly Color GLOW_COLOR_SELECTED = new Color32( 150, 182, 216 );
-
-	[Net] 
-	public RoadVehicleDefinition RoadVehicleDefinition { get; private set; }
+	public RoadVehicleDefinition RoadVehicleDefinition => VehicleDefinition as RoadVehicleDefinition;
 
 	public override void Spawn()
 	{
 		base.Spawn();
 
-		Transmit = TransmitType.Always;
-		Predictable = false;
-
-		Tags.Add( CustomTags.Vehicle );
 		Tags.Add( CustomTags.RoadVehicle );
 	}
 
@@ -35,11 +25,6 @@ public partial class RoadVehicleEntity : Prop, IInteractableEntity
 		base.ClientSpawn();
 		
 		CreatePhysicalWheels();
-	}
-
-	public override void FrameSimulate( IClient cl )
-	{
-		base.FrameSimulate( cl );
 	}
 
 	public override void Simulate( IClient cl )
@@ -58,72 +43,15 @@ public partial class RoadVehicleEntity : Prop, IInteractableEntity
 		UpdateMovement();
 	}
 
-	public bool IsSelectable => true;
-
-	public bool CanSelect( Player.Player player )
+	public override void SetVehicleDefinition( BaseVehicleDefinition vehicleDefinition )
 	{
-		return Owner == null;
-	}
-
-	public virtual void Selected( Player.Player player )
-	{
-		if ( Game.IsServer && CanSelect( player ) )
+		if ( vehicleDefinition.GetType() != typeof( RoadVehicleDefinition ) )
 		{
-			LOGGER.Info( $"Player {player.Client.Name} has taken control of vehicle {Name}" );
-			Owner = player;
+			LOGGER.Error( $"RoadVehicleEntity had wrong vehicle definition set. Expected RoadVehicleDefinition recieved {vehicleDefinition.GetType().Name}" );
+			return;
 		}
 
-		if ( Game.IsClient && Owner == Game.LocalPawn )
-		{
-			Components.GetOrCreate<Glow>().Color = GLOW_COLOR_SELECTED;
-		}
-	}
-
-	public virtual void Unselected( Player.Player player )
-	{
-		if ( Game.IsServer )
-		{
-			LOGGER.Info( $"Player {player.Client.Name} has relinquished control of vehicle {Name}" );
-			Owner = null;
-		}
-
-		if ( Game.IsClient )
-		{
-			Components.GetOrCreate<Glow>().Enabled = false;
-		}
-	}
-
-	public void Hovered( Player.Player player )
-	{
-		Game.AssertClient();
-
-		if ( player == Game.LocalPawn && player != Owner )
-		{
-			var glow = Components.GetOrCreate<Glow>();
-			glow.Enabled = true;
-			glow.Width = 0.5f;
-			glow.Color = CanSelect( player ) ? GLOW_COLOR_SELECTABLE : GLOW_COLOR_UNSELECTABLE;
-		}
-	}
-
-	public void Unhovered( Player.Player player )
-	{
-		Game.AssertClient();
-
-		if ( player == Game.LocalPawn && player != Owner )
-		{
-			Components.GetOrCreate<Glow>().Enabled = false;
-		}
-	}
-
-	public void SetVehicleDefinition( RoadVehicleDefinition roadVehicleDefinition )
-	{
-		RoadVehicleDefinition = roadVehicleDefinition;
-
-		SetModel( roadVehicleDefinition.ModelPath );
-		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
-		EnableSelfCollisions = false;
-		EnableShadowCasting = false;
+		base.SetVehicleDefinition( vehicleDefinition );
 
 		CreateSimulatedWheels();
 	}

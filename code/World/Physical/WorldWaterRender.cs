@@ -16,7 +16,6 @@ public class WorldWaterRender : RenderHook
 	public static void RenderEffect()
 	{
 		var water = TycoonGame.Instance.WorldManager.WorldWaterEntity;
-		Graphics.GrabFrameTexture( "ColorBuffer", water.SceneObject.Attributes );
 		Graphics.GrabDepthTexture( "DepthBuffer", water.SceneObject.Attributes );
 	}
 }

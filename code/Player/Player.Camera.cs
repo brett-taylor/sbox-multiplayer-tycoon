@@ -39,7 +39,6 @@ public partial class Player
 
 	private void UpdateCamera()
 	{
-		Camera.Main.EnablePostProcessing = false;
 		Camera.FieldOfView = Fov;
 		Camera.ZNear = ZNear;
 		Camera.ZFar = ZFar;

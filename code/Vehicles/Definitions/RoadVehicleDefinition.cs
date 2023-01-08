@@ -1,10 +1,13 @@
 ﻿using Sandbox;
+using TycoonGame.Vehicles.Road;
 
 namespace TycoonGame.Vehicles.Definitions;
 
 [GameResource( "Road Vehicle Definition", "roadveh", "Road Vehicle" )]
 public class RoadVehicleDefinition : BaseVehicleDefinition
 {
+	public override string EntityTypeName => typeof(RoadVehicleEntity).Name;
+
 	public float WheelSize { get; set; }
 
 	public float MaximumSpeed { get; set; }

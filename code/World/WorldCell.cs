@@ -3,7 +3,7 @@
 public class WorldCell
 {
 	public static readonly float WORLD_CELL_SIZE = 500f;
-	public static readonly float WORLD_CELL_HEIGHT = 50f; 
+	public static readonly float WORLD_CELL_HEIGHT = 50f;
 
 	public WorldCoordinate WorldCoordinate { get; set; }
 	public bool IsWater { get; set; }

@@ -2,6 +2,7 @@
 {
 	data = 
 	{
+		EntityTypeName = "RoadVehicleEntity"
 		WheelSize = 20
 		MaximumSpeed = 500
 		AccelerationSpeed = 100

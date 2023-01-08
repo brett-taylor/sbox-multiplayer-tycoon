@@ -13,4 +13,5 @@ public class CustomTags
 
 	public static readonly string Vehicle = "vehicle";
 	public static readonly string RoadVehicle = "roadvehicle";
+	public static readonly string WaterVehicle = "watervehicle";
 }

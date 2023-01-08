@@ -1,7 +1,6 @@
 ﻿using Sandbox;
 using System;
 using TycoonGame.Simulation;
-using TycoonGame.Utilities;
 using TycoonGame.Vehicles;
 using TycoonGame.World;
 
@@ -10,14 +9,17 @@ namespace TycoonGame;
 /*
 1. Vehicle driving ✅
 2. Road building ✅
-	2.1 Road Depot ✅
-	2.2 Better Terrain with water ✅
-	2.3 Ships
-	2.4 Ship Depot
-3. Basic Industry chain
-4. Rail building
-5. Train driving
-6. Industry chain via train
+3. Road Depot ✅
+4. Better Terrain with water ✅
+5. Ships ✅
+6. Ship Depot (With ground/water restriction in building controller)
+7. Basic Industry chain (Producer building, vehicle can pick up resource, drop to consumer, get money, no producer/supplier mix yet)
+8. Road dragging and tiles updating (Probably just wave function collapse on surrounding neighbours at this point)
+7. Rail dragging building. (Probably just straight tracks and corners, no junctions yet)
+8. Trains and driving (Multi entity vehicles)
+9. Any necessary updates to industry chains to make trains work (Train stations at least?)
+10. Rail Junctions
+11. Rail Signals
 */
 
 public partial class TycoonGame : GameManager
@@ -46,6 +48,7 @@ public partial class TycoonGame : GameManager
 		{
 			WorldManager = new WorldManager();
 			var seed = new Random().Float( -1f, 1f ) * 50_00f;
+			seed = 696.17926f;
 			WorldManager.CreateWorld( new WorldCoordinate( 20, 20 ), seed );
 
 			CompanyManager = new CompanyManager();

@@ -35,12 +35,10 @@ public partial class BuildingController : Entity
 			return;
 
 		BuildingGridDisplay = new BuildingGridDisplay();
-		BuildingGridDisplay.Spawn();
 		BuildingGridDisplay.Owner = Owner;
 		BuildingGridDisplay.EnableDrawing = false;
 
 		GhostBuilding = new GhostBuilding();
-		GhostBuilding.Spawn();
 		GhostBuilding.Owner = Owner;
 		GhostBuilding.EnableDrawing = false;
 	}
