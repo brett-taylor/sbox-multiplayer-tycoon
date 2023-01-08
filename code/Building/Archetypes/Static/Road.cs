@@ -1,4 +1,4 @@
-﻿namespace TycoonGame.Building.Types.Static;
+﻿namespace TycoonGame.Building.Archetypes.Static;
 
 [Category( "Buildings/Infrastructure/Roads" )]
 public class Road : BaseBuilding

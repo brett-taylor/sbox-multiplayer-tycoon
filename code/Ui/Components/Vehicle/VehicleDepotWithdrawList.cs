@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
-using TycoonGame.Building.Types.Interactable;
+using TycoonGame.Building.Archetypes.Interactable;
 using TycoonGame.Vehicles;
 
 public partial class VehicleDepotWithdrawList

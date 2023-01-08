@@ -2,7 +2,7 @@
 {
 	data = 
 	{
-		Name = "Road Depot (Small)"
+		Name = "Water Depot (Small)"
 		Archetype = "TycoonGame.Building.Archetypes.Interactable.RoadDepot"
 		PlacementType = "FIXED_SIZE"
 		ModelPath = resource:"models/buildings/road_depot/small_depot.vmdl"

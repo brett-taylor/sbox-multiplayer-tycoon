@@ -1,9 +1,8 @@
 ﻿using Sandbox;
-using TycoonGame.Building.Core;
 using TycoonGame.Utilities.Enumertion;
 using TycoonGame.World;
 
-namespace TycoonGame.Building.Types;
+namespace TycoonGame.Building.Archetypes;
 
 public abstract class BaseBuilding : ModelEntity
 {
@@ -23,9 +22,9 @@ public abstract class BaseBuilding : ModelEntity
 	{
 		BuildingDefinition = buildingDefinition;
 		
-		if (buildingDefinition.BuildingModelPath != null) {
-			Name = BuildingDefinition.BuildingName;
-			Model = Model.Load(buildingDefinition.BuildingModelPath);
+		if (buildingDefinition.ModelPath != null) {
+			Name = BuildingDefinition.Name;
+			Model = Model.Load(buildingDefinition.ModelPath);
 			SetupPhysicsFromModel( PhysicsMotionType.Keyframed );
 
 			EnableSelfCollisions = false;

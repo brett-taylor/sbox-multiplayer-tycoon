@@ -1,10 +1,10 @@
 ﻿using Sandbox;
 using TycoonGame.World;
 
-namespace TycoonGame.Building.Core;
+namespace TycoonGame.Building.Placement;
 
 [Category( "Simulation" )]
-public class BuildingGridDisplay : ModelEntity
+public class GridDisplay : ModelEntity
 {
 	private static readonly float HEIGHT = 1f;
 	private static readonly float HEIGHT_OFFSET = 1f;
@@ -41,10 +41,10 @@ public class BuildingGridDisplay : ModelEntity
 
 	public void SetPosition( WorldCell worldCell )
 	{
-		var offset = ( SIZE_IN_CELLS - 1 ) / 2;
+		var offset = (SIZE_IN_CELLS - 1) / 2;
 		var offsetTilePosition = worldCell.WorldCoordinate - offset;
 
-		var height = (worldCell.WorldHeight() * WorldCell.WORLD_CELL_HEIGHT) + HEIGHT_OFFSET;
+		var height = worldCell.WorldHeight() * WorldCell.WORLD_CELL_HEIGHT + HEIGHT_OFFSET;
 
 		Vector3 position = new Vector3(
 			offsetTilePosition.X * WorldCell.WORLD_CELL_SIZE,

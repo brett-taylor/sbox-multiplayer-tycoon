@@ -1,10 +1,10 @@
 ﻿using Sandbox;
-using TycoonGame.Building.Types;
+using TycoonGame.Building.Archetypes;
 
-namespace TycoonGame.Building.Core;
+namespace TycoonGame.Building.Placement;
 
 [Category( "Simulation" )]
-public class GhostBuilding : BaseBuilding
+public class FixedSizePlacementGhost : BaseBuilding
 {
 	public override void Spawn()
 	{

@@ -1,5 +1,5 @@
 ﻿using Sandbox;
-using TycoonGame.Building.Core;
+using TycoonGame.Building;
 
 namespace TycoonGame.Player;
 

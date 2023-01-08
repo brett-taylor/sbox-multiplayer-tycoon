@@ -7,7 +7,7 @@ using TycoonGame.Utilities;
 using TycoonGame.Vehicles;
 using TycoonGame.Vehicles.Definitions;
 
-namespace TycoonGame.Building.Types.Interactable;
+namespace TycoonGame.Building.Archetypes.Interactable;
 
 [Category( "Buildings/Maintenance" )]
 public partial class RoadDepot : InteractableBuilding

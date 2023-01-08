@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TycoonGame.Building.Types.Interactable;
+using TycoonGame.Building.Archetypes.Interactable;
 using TycoonGame.Vehicles;
 using TycoonGame.Vehicles.Definitions;
 

@@ -4,7 +4,7 @@
 @using System;
 @using System.Linq;
 @using System.Collections.Generic;
-@using TycoonGame.Building.Core;
+@using TycoonGame.Building;
 
 @attribute [StyleSheet("/Ui/Hud/_BuildHud.scss")]
 @inherits Panel
@@ -13,9 +13,7 @@
 	<div class="container">
 		@foreach (var buildingDefinition in BuildingDefinitions)
 		{
-			<div class="build-button" onclick=@(() => StartBuilding(buildingDefinition))>
-				@buildingDefinition.BuildingName
-			</div>
+			<div class="build-button" onclick=@(() => StartBuilding(buildingDefinition))>@buildingDefinition.Name</div>
 		}
 	</div>
 </root>

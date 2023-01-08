@@ -1,7 +1,7 @@
 ﻿using Sandbox.Component;
 using TycoonGame.Player;
 
-namespace TycoonGame.Building.Types.Interactable;
+namespace TycoonGame.Building.Archetypes.Interactable;
 
 public abstract class InteractableBuilding : BaseBuilding, IInteractableEntity
 {
