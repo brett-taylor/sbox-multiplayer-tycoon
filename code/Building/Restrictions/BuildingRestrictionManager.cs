@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions.Impl;
-using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Restrictions;
 
@@ -63,7 +63,8 @@ public class BuildingRestrictionManager : IHotloadManaged
 		{
 			{ BuildingRestrictionType.IS_ON_GROUND, new IsOnGroundBuildingRestriction() },
 			{ BuildingRestrictionType.IS_ON_WATER, new IsOnWaterBuildingRestriction() },
-			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL, new NoBuildingOnWorldCellRestriction() }
+			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL, new NoBuildingOnWorldCellRestriction() },
+			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL_IGNORE_SELF, new NoBuildingOnWorldCellRestrictionIgnoreSelf() }
 		};
 	}
 

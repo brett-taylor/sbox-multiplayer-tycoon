@@ -3,5 +3,5 @@
 public enum PlacementType
 {
 	FIXED_SIZE,
-	FLEXIBLE_SIZE,
+	ROAD,
 }

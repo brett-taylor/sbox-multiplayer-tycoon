@@ -1,10 +1,13 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
+using System.Text.Json;
+using System.Threading.Tasks;
 using TycoonGame.Building.Archetypes;
 using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions;
 using TycoonGame.Utilities;
 using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Placement;
 
@@ -56,6 +59,7 @@ public class FixedSizePlacementController : PlacementController
 		base.UpdateClient( cl );
 
 		var hoveredWorldCell = (cl.Pawn as Player.Player).GetHoveredWorldCell();
+
 		if ( hoveredWorldCell == null )
 		{
 			FixedSizePlacementGhostClient.EnableDrawing = false;
@@ -66,7 +70,7 @@ public class FixedSizePlacementController : PlacementController
 		if (LastHoveredWorldCell != hoveredWorldCell)
 		{
 			IsCurrentlyValid = BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, hoveredWorldCell, out BuildingRestriction ignored );
-		}
+		}		
 
 		FixedSizePlacementGhostClient.SetPosition( hoveredWorldCell );
 		FixedSizePlacementGhostClient.EnableDrawing = true;
@@ -84,7 +88,18 @@ public class FixedSizePlacementController : PlacementController
 
 		if ( Input.Pressed( InputButton.PrimaryAttack ) )
 		{
-			BuildingController.ConCmd_PlaceBuilding( SerializePlacementString( hoveredWorldCell, FixedSizePlacementGhostClient.Rotation.Yaw() ) );
+			var placeData = new PlaceData()
+			{
+				Position = hoveredWorldCell,
+				Yaw = FixedSizePlacementGhostClient.Rotation.Yaw(),
+			};
+
+			BuildingController.ConCmd_PlaceBuilding( JsonSerializer.Serialize( placeData ) );
+		}
+
+		if (Input.Pressed(InputButton.SecondaryAttack ) ) 
+		{
+			BuildingController.ConCmd_StopBuilding();
 		}
 
 		LastHoveredWorldCell = hoveredWorldCell;
@@ -94,12 +109,7 @@ public class FixedSizePlacementController : PlacementController
 	{
 		base.PlaceBuilding( data );
 
-		DeserializePlacementString( data, out WorldCell worldCell, out float yaw );
-
-		if ( worldCell == null )
-		{
-			return;
-		}
+		var placeData = Json.Deserialize<PlaceData>( data );
 
 		if ( !TycoonGame.Instance.CompanyManager.HasMoney( BuildingDefinition.Price ) )
 		{
@@ -107,7 +117,7 @@ public class FixedSizePlacementController : PlacementController
 			return;
 		}
 
-		if (!BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, worldCell, out BuildingRestriction buildingRestriction ))
+		if (!BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, placeData.Position, out BuildingRestriction buildingRestriction ))
 		{
 			LOGGER.Warning( $"[TODO UI Popups] Failed a restriction: { buildingRestriction.LastFailedReason }" );
 			return;
@@ -117,39 +127,15 @@ public class FixedSizePlacementController : PlacementController
 
 		var newBuildng = TypeLibrary.Create<BaseBuilding>( BuildingDefinition.Archetype );
 		newBuildng.SetBuildingDefinition( BuildingDefinition );
-		newBuildng.SetPosition( worldCell );
-		newBuildng.Rotation = Rotation.FromYaw( yaw );
+		newBuildng.SetPosition( placeData.Position );
+		newBuildng.Rotation = Rotation.FromYaw( placeData.Yaw );
+
+		TycoonGame.Instance.WorldManager.RegisterNewBuilding( placeData.Position.WorldCoordinate, newBuildng );
 	}
 
-	private string SerializePlacementString(WorldCell worldCell, float yaw)
+	private class PlaceData
 	{
-		return $"{worldCell.WorldCoordinate.X},{worldCell.WorldCoordinate.Y},{yaw}";
-	}
-
-	private void DeserializePlacementString( string data, out WorldCell worldCell, out float yaw )
-	{
-		worldCell = null;
-		yaw = 0f;
-
-		var split = data.Split( ',' );
-
-		if (split.Length != 3)
-		{
-			LOGGER.Error( $"Failed to deserialize placement string" );
-			return;
-		}
-
-		var worldCellXIsNumeric = int.TryParse( split[0], out int worldCellX );
-		var worldCellYIsNumeric = int.TryParse( split[1], out int worldCellY );
-		var yawIsNumeric = float.TryParse( split[2], out float rotationYaw );
-
-		if ( !worldCellXIsNumeric || !worldCellYIsNumeric || !yawIsNumeric )
-		{
-			LOGGER.Error( $"Failed to deserialize placement string" );
-			return;
-		}
-
-		worldCell = TycoonGame.Instance.WorldManager.GetWorldCell(new WorldCoordinate(worldCellX, worldCellY));
-		yaw = rotationYaw;
+		public WorldCell Position { get; set; }
+		public float Yaw { get; set; }
 	}
 }

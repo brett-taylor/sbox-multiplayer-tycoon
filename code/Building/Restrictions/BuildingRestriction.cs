@@ -1,5 +1,5 @@
 ﻿using TycoonGame.Building.Definitions;
-using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Restrictions;
 

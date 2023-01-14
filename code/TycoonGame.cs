@@ -12,14 +12,14 @@ namespace TycoonGame;
 3. Road Depot ✅
 4. Better Terrain with water ✅
 5. Ships ✅
-6. Ship Depot (With ground/water restriction in building controller)
-7. Basic Industry chain (Producer building, vehicle can pick up resource, drop to consumer, get money, no producer/supplier mix yet)
-8. Road dragging and tiles updating (Probably just wave function collapse on surrounding neighbours at this point)
-7. Rail dragging building. (Probably just straight tracks and corners, no junctions yet)
-8. Trains and driving (Multi entity vehicles)
-9. Any necessary updates to industry chains to make trains work (Train stations at least?)
-10. Rail Junctions
-11. Rail Signals
+6. Ship Depot (With ground/water restriction in building controller) ✅
+7. Road dragging and tiles updating (Rough system, needs whole Track system that will come with rails)✅
+8. Basic Industry chain (Producer building, vehicle can pick up resource, drop to consumer, get money, no producer/supplier mix yet)
+9. Rail dragging building. (Probably just straight tracks and corners, no junctions yet)
+10. Trains and driving (Multi entity vehicles)
+11. Any necessary updates to industry chains to make trains work (Train stations at least?)
+12. Rail Junctions
+13. Rail Signals
 */
 
 public partial class TycoonGame : GameManager
@@ -49,7 +49,7 @@ public partial class TycoonGame : GameManager
 			WorldManager = new WorldManager();
 			var seed = new Random().Float( -1f, 1f ) * 50_00f;
 			seed = 696.17926f;
-			WorldManager.CreateWorld( new WorldCoordinate( 20, 20 ), seed );
+			WorldManager.CreateWorld( new WorldCoordinate( 50, 50 ), seed );
 
 			CompanyManager = new CompanyManager();
 			VehicleManager = new VehicleManager();
@@ -63,6 +63,7 @@ public partial class TycoonGame : GameManager
 		cl.Pawn = new Player.Player();
 
 		CreateWorldClient( To.Single( cl ), WorldManager.WorldSize.X, WorldManager.WorldSize.Y, WorldManager.Seed );
+		WorldManager.RefreshBuildingsForNewClient( cl );
 	}
 
 	public override void ClientDisconnect( IClient cl, NetworkDisconnectionReason reason )
@@ -75,9 +76,8 @@ public partial class TycoonGame : GameManager
 		CompanyManager.ClientDisconnect( cl, reason );
 	}
 
-
 	[ClientRpc]
-	private void CreateWorldClient(int worldSizeX, int worldSizeY, float seed)
+	private void CreateWorldClient( int worldSizeX, int worldSizeY, float seed )
 	{
 		WorldManager.CreateWorld( new WorldCoordinate( worldSizeX, worldSizeY ), seed );
 	}

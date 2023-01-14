@@ -1,0 +1,12 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	data = 
+	{
+		NoConnectionsModel = resource:"models/buildings/asphalt_road/asphalt_road_straight.vmdl"
+		OneConnectionsModel = resource:"models/buildings/asphalt_road/asphalt_road_straight.vmdl"
+		TwoStraightConnectionsModel = resource:"models/buildings/asphalt_road/asphalt_road_straight.vmdl"
+		TwoTurnConnectiosnModel = resource:"models/buildings/asphalt_road/asphalt_road_turn.vmdl"
+		ThreeConnectionsModel = resource:"models/buildings/asphalt_road/asphalt_road_t_junction.vmdl"
+		FourConnectionsModel = resource:"models/buildings/asphalt_road/asphalt_road_crossroads.vmdl"
+	}
+}

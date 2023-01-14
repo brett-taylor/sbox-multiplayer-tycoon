@@ -11,3 +11,4 @@ release.zip
 *.los
 .vs
 *.generated.*
+.idea

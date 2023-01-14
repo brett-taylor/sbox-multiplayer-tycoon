@@ -1,7 +1,8 @@
 ﻿using Sandbox;
 using Sandbox.Diagnostics;
 using TycoonGame.Utilities;
-using TycoonGame.World.Physical;
+using TycoonGame.World.Data;
+using TycoonGame.World.Generator;
 
 namespace TycoonGame.World;
 
@@ -22,10 +23,7 @@ public partial class WorldManager : Entity
 
 	public WorldCell[,] WorldCells { get; private set; }
 
-	public WorldGroundEntity WorldGroundEntity { get; private set; }
 	
-	public WorldWaterEntity WorldWaterEntity { get; private set; }
-
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -40,13 +38,11 @@ public partial class WorldManager : Entity
 
 		GenerateWorldCells();
 
-		WorldGroundEntity = CreateWorldGroundEntity();
-		WorldWaterEntity = CreateWorldWaterEntity();
+		CreatePhysicalWorld();
 
 		if (Game.IsClient)
 		{
-			CreateWorldBedrockEntity();
-			(Game.LocalPawn as Player.Player).TargetLookPosition = GetWorldCell( WorldSize / 2 ).CenterTilePosition();
+			( Game.LocalPawn as Player.Player).TargetLookPosition = GetWorldCell( WorldSize / 2 ).CenterTilePosition();
 		}
 	}
 
@@ -76,53 +72,5 @@ public partial class WorldManager : Entity
 		generator.Seed = Seed;
 
 		WorldCells = generator.GenerateProceduralWorld();
-	}
-
-	private WorldGroundEntity CreateWorldGroundEntity()
-	{
-		var worldGround = new WorldGroundEntity();
-		worldGround.Position = new Vector3( 0f, 0f, 0f );
-
-		if ( Game.IsServer )
-		{
-			worldGround.Name = "WorldGroundEntity (Server)";
-		}
-		else
-		{
-			worldGround.Name = "WorldGroundEntity (Client)";
-			worldGround.Owner = Game.LocalPawn;
-		}
-
-		return worldGround;
-	}
-
-	private WorldWaterEntity CreateWorldWaterEntity()
-	{
-		var worldWater = new WorldWaterEntity();
-		worldWater.Position = new Vector3( 0f, 0f, 0f );
-
-		if (Game.IsServer)
-		{
-			worldWater.Name = "WorldWaterEntity (Server)";
-		}
-		else
-		{
-			worldWater.Name = "WorldWaterEntity (Client)";
-			worldWater.Owner = Game.LocalPawn;
-		}
-
-		return worldWater;
-	}
-
-	private WorldBedrockEntity CreateWorldBedrockEntity()
-	{
-		Assert.True( Game.IsClient );
-
-		var worldBedrock = new WorldBedrockEntity();
-		worldBedrock.Position = new Vector3( 0f, 0f, 0f );
-		worldBedrock.Name = $"WorldBedrockEntity (Client)";
-		worldBedrock.Owner = Game.LocalPawn;
-
-		return worldBedrock;
 	}
 }

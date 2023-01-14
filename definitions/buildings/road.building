@@ -2,26 +2,25 @@
 {
 	data = 
 	{
-		Name = "Road Depot (Small)"
-		Archetype = "TycoonGame.Building.Archetypes.VehicleDepot"
-		PlacementType = "FIXED_SIZE"
-		ModelPath = resource:"models/buildings/road_depot/small_depot.vmdl"
+		Name = "Road"
+		Archetype = "TycoonGame.Building.Archetypes.Road"
+		PlacementType = "ROAD"
+		ModelPath = null
 		Size = 
 		{
 			X = 1
 			Y = 1
 		}
-		Price = 2000
+		Price = 500
 		Restrictions = 
 		[
 			"IS_ON_GROUND",
-			"NO_BUILDING_ON_WORLD_CELL",
+			"NO_BUILDING_ON_WORLD_CELL_IGNORE_SELF",
 		]
-		TileModel = null
+		TileModel = resource:"definitions/buildings/road.wfctm"
 		ProvideRoadConnection = true
 		Properties = 
 		{
-			VehicleGroupType = "ROAD"
 		}
 	}
 }

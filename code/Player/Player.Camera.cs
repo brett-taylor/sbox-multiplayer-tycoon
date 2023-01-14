@@ -7,7 +7,7 @@ public partial class Player
 	private static bool DEBUG_CAMERA = false;
 
 	private float MinCameraHeight { get; set; } = 500f;	
-	private float MaxCameraHeight { get; set; } = 10_000f;
+	private float MaxCameraHeight { get; set; } = 15_000f;
 	private float CameraPitch { get; set; } = 45f;
 	private float Fov { get; set; } = 30f;
 	private float PanSpeed { get; set; } = 10f;
@@ -17,7 +17,7 @@ public partial class Player
 	private float ZoomSpeed { get; set; } = -0.05f;
 	private float ZoomLerpTime { get; set; } = 10f;
 	private float ZNear { get; set; } = 10f;
-	private float ZFar { get; set; } = 25_000f;
+	private float ZFar { get; set; } = 30_000f;
 
 	private Vector3 CurrentLookPosition { get; set; }
 	public Vector3 TargetLookPosition { get; set; }

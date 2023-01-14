@@ -1,6 +1,6 @@
 ﻿using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions;
-using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace Sandbox.Building.Restrictions.Impl;
 
