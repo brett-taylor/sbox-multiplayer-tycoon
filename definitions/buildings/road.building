@@ -1,0 +1,24 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	data = 
+	{
+		Name = "Road"
+		Archetype = "TycoonGame.Building.Archetypes.Road"
+		PlacementType = "ROAD"
+		ModelPath = resource:"models/buildings/asphalt_road/asphalt_road_straight.vmdl"
+		Size = 
+		{
+			X = 1
+			Y = 1
+		}
+		Price = 500
+		Restrictions = 
+		[
+			"IS_ON_GROUND",
+			"NO_BUILDING_ON_WORLD_CELL_IGNORE_SELF",
+		]
+		Properties = 
+		{
+		}
+	}
+}

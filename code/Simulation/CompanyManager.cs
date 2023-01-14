@@ -32,7 +32,7 @@ public partial class CompanyManager : Entity
 
 	public bool HasMoney( int amount )
 	{
-		return Money - amount > 0;
+		return Money - amount >= 0;
 	}
 
 	public void RemoveMoney( int amount )

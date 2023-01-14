@@ -63,7 +63,8 @@ public class BuildingRestrictionManager : IHotloadManaged
 		{
 			{ BuildingRestrictionType.IS_ON_GROUND, new IsOnGroundBuildingRestriction() },
 			{ BuildingRestrictionType.IS_ON_WATER, new IsOnWaterBuildingRestriction() },
-			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL, new NoBuildingOnWorldCellRestriction() }
+			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL, new NoBuildingOnWorldCellRestriction() },
+			{ BuildingRestrictionType.NO_BUILDING_ON_WORLD_CELL_IGNORE_SELF, new NoBuildingOnWorldCellRestrictionIgnoreSelf() }
 		};
 	}
 

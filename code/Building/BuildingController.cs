@@ -53,25 +53,11 @@ public partial class BuildingController : Entity
 		} 
 		else
 		{
-			if (PlacementController != null)
-			{
-				PlacementController.StopBuildingClient();
-			}
+			PlacementController?.StopBuildingClient();
 
 			PlacementController = CreateBuildingPlacement( newValue );
 			PlacementController.StartBuildingClient();
 		}
-	}
-
-	public override void Simulate( IClient cl )
-	{
-		base.Simulate( cl );
-
-		if ( !IsBuilding() || !Game.IsServer )
-			return;
-
-		if ( Input.Pressed( InputButton.SecondaryAttack ) )
-			StopBuilding();
 	}
 
 	public override void FrameSimulate( IClient cl )
@@ -91,9 +77,10 @@ public partial class BuildingController : Entity
 
 	private PlacementController CreateBuildingPlacement( BuildingDefinition buildingDefinition )
 	{
-		var placementController = buildingDefinition.PlacementType switch
+		PlacementController placementController = buildingDefinition.PlacementType switch
 		{
 			PlacementType.FIXED_SIZE => new FixedSizePlacementController( buildingDefinition ),
+			PlacementType.ROAD => new RoadPlacementController( buildingDefinition ),
 			_ => throw new System.Exception( $"{buildingDefinition.ResourcePath} does not have a placement type set." )
 		};
 
@@ -140,5 +127,14 @@ public partial class BuildingController : Entity
 		}
 
 		player.BuildingController.PlaceBuilding( data );
+	}
+
+	[ConCmd.Server("stop_building")]
+	public static void ConCmd_StopBuilding()
+	{
+		if ( ConsoleSystem.Caller == null || ConsoleSystem.Caller.Pawn is not Player.Player player )
+			return;
+
+		player.BuildingController.StopBuilding();
 	}
 }

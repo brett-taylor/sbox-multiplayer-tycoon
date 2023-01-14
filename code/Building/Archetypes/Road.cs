@@ -1,6 +1,4 @@
-﻿using TycoonGame.Building.Archetypes;
-
-namespace Sandbox.Building.Archetypes;
+﻿namespace TycoonGame.Building.Archetypes;
 
 [Category( "Buildings/Infrastructure/Roads" )]
 public partial class Road : BaseBuilding

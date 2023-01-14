@@ -7,7 +7,7 @@ public partial class Player
 	private static bool DEBUG_CAMERA = false;
 
 	private float MinCameraHeight { get; set; } = 500f;	
-	private float MaxCameraHeight { get; set; } = 10_000f;
+	private float MaxCameraHeight { get; set; } = 15_000f;
 	private float CameraPitch { get; set; } = 45f;
 	private float Fov { get; set; } = 30f;
 	private float PanSpeed { get; set; } = 10f;

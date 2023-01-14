@@ -22,7 +22,7 @@ public partial class BuildingDefinition : GameResource
 
 	public int Price { get; set; }
 
-	public List<BuildingRestrictionType> Restrictions { get; set; }
+	public List<BuildingRestrictionType> Restrictions { get; set; } = new List<BuildingRestrictionType>();
 
-	public Dictionary<string, string> Properties { get; set; }
+	public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 }

@@ -87,6 +87,11 @@ public class FixedSizePlacementController : PlacementController
 			BuildingController.ConCmd_PlaceBuilding( SerializePlacementString( hoveredWorldCell, FixedSizePlacementGhostClient.Rotation.Yaw() ) );
 		}
 
+		if (Input.Pressed(InputButton.SecondaryAttack ) ) 
+		{
+			BuildingController.ConCmd_StopBuilding();
+		}
+
 		LastHoveredWorldCell = hoveredWorldCell;
 	}
 

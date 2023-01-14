@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Collections.Generic;
 using System.Linq;
 using TycoonGame.Building.Definitions;
 using TycoonGame.Utilities.Enumertion;
@@ -19,8 +20,14 @@ public class NoBuildingOnWorldCellRestriction : BuildingRestriction
 		var mins = new Vector3( worldCell.BottomLeftPosition().x + BBOX_DEADZONE, worldCell.BottomLeftPosition().y + BBOX_DEADZONE, 0f );
 		var maxs = new Vector3( worldCell.TopRightPosition().x - BBOX_DEADZONE, worldCell.TopRightPosition().y - BBOX_DEADZONE, 50f );
 		var bboxToCheck = new BBox( mins, maxs );
-		var entities = Entity.FindInBox( bboxToCheck ).Where( entity => entity.Tags.Has( CustomTags.Building ) ).ToList();
+
+		var entities = Entity.FindInBox( bboxToCheck ).Where( entity => FilterEntity( buildingDefinition, entity ) ).ToList();
 
 		return entities.Count == 0;
+	}
+
+	protected virtual bool FilterEntity( BuildingDefinition buildingDefinition, Entity entity )
+	{
+		return entity.Tags.Has( CustomTags.Building );
 	}
 }
