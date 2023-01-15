@@ -1,24 +1,22 @@
-﻿using Sandbox;
-using TycoonGame.Building.Archetypes;
+﻿using TycoonGame.Building.Archetypes;
 using TycoonGame.Building.Definitions;
-using TycoonGame.Utilities;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Restrictions.Impl;
 
-public class NoBuildingOnWorldCellRestrictionIgnoreSelf : NoBuildingOnWorldCellRestriction
+public class NoBuildingOnWorldCellRestrictionIgnoreSelf : BuildingRestriction
 {
-	protected override bool FilterEntity( BuildingDefinition buildingDefinition, Entity entity )
-	{
-		return base.FilterEntity( buildingDefinition, entity ) && IsEntityBuildingDefinition( buildingDefinition, entity );
-	}
+	public override string LastFailedReason => "Another building is already here";
 
-	private bool IsEntityBuildingDefinition( BuildingDefinition buildingDefinition, Entity entity )
+	public override bool Applies( BuildingDefinition buildingDefinition ) => true;
+
+	public override bool Valid( BuildingDefinition buildingDefinition, WorldCell worldCell )
 	{
-		if (entity is BaseBuilding baseBuildingEntity) 
+		if ( TycoonGame.Instance.WorldManager.DoesBuildingExistOn( worldCell.WorldCoordinate, out BaseBuilding building ) )
 		{
-			return baseBuildingEntity.BuildingDefinition != buildingDefinition;
+			return building.BuildingDefinition == buildingDefinition;
 		}
 		
-		return false;
+		return true;
 	}
 }

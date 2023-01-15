@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 using TycoonGame.Utilities.Enumertion;
-using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Player;
 

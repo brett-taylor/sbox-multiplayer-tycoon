@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using TycoonGame.Utilities.Enumertion;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.World.Physical;
 

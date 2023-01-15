@@ -2,11 +2,14 @@
 using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using TycoonGame.Building.Archetypes;
 using TycoonGame.Building.Definitions;
 using TycoonGame.Building.Restrictions;
 using TycoonGame.Utilities;
 using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Placement;
 
@@ -18,6 +21,8 @@ public class RoadPlacementController : PlacementController
 
 	private WorldCell StartDragWorldCell { get; set; }
 	private WorldCell EndDragWorldCell { get; set; }
+	private WorldCell FirstTileHoveredAfterDragging { get; set; }
+	private bool IsAnchored { get; set; }
 
 	public RoadPlacementController( BuildingDefinition buildingDefinition ) : base( buildingDefinition )
 	{
@@ -69,16 +74,14 @@ public class RoadPlacementController : PlacementController
 	{
 		base.PlaceBuilding( data );
 
-		DeserializePlacementString( data, out WorldCell startWorldCell, out WorldCell endWorldCell );
+		var placeData = Json.Deserialize<PlaceData>( data );
+		StartDragWorldCell = placeData.StartDragWorldCell;
+		EndDragWorldCell = placeData.EndDragWorldCell;
+		FirstTileHoveredAfterDragging = placeData.FirstTileHoveredAfterDragging;
+		IsAnchored = placeData.IsAnchored;
 
-		if ( startWorldCell == null || endWorldCell == null )
-		{
-			return;
-		}
+		var buildPath = CalculateBuildPath();
 
-		var buildPath = CalculateBuildPath( startWorldCell, endWorldCell );
-
-		LOGGER.Info( "called" );
 		if ( !PassMoneyCheck( buildPath, true ) || !PassBuildingRestrictionCheck( buildPath, true ) )
 		{
 			return;
@@ -86,18 +89,29 @@ public class RoadPlacementController : PlacementController
 
 		TycoonGame.Instance.CompanyManager.RemoveMoney( CalculateTotalCost( buildPath ) );
 
-		foreach( var worldCell in buildPath )
+		var worldCellsToPlaceOn = buildPath
+			.Where( path => !TycoonGame.Instance.WorldManager.DoesBuildingTypeExistOn( path.WorldCoordinate, BuildingDefinition ) )
+			.ToList();
+
+		var newBuildings = new Dictionary<WorldCoordinate, BaseBuilding>();
+		foreach( var worldCell in worldCellsToPlaceOn )
 		{
 			var newBuildng = TypeLibrary.Create<BaseBuilding>( BuildingDefinition.Archetype );
 			newBuildng.SetBuildingDefinition( BuildingDefinition );
 			newBuildng.SetPosition( worldCell );
+			
+			newBuildings.Add( worldCell.WorldCoordinate, newBuildng );
 		}
+
+		TycoonGame.Instance.WorldManager.RegisterNewBuildings( newBuildings );
 	}
 
 	private void ResetDrag()
 	{
 		StartDragWorldCell = null;
 		EndDragWorldCell = null;
+		IsAnchored = false;
+		FirstTileHoveredAfterDragging = null;
 	}
 
 	private void UpdateClientNotDragging( WorldCell hoveredWorldCell )
@@ -105,6 +119,7 @@ public class RoadPlacementController : PlacementController
 		if (Input.Pressed(InputButton.PrimaryAttack))
 		{
 			StartDragWorldCell = hoveredWorldCell;
+			IsAnchored = TycoonGame.Instance.WorldManager.DoesBuildingTypeExistOn( hoveredWorldCell.WorldCoordinate, BuildingDefinition );
 		}
 
 		if ( Input.Pressed( InputButton.SecondaryAttack ) )
@@ -121,51 +136,121 @@ public class RoadPlacementController : PlacementController
 			return;
 		}
 
-		if (EndDragWorldCell != hoveredWorldCell)
+		if (FirstTileHoveredAfterDragging != null && StartDragWorldCell == hoveredWorldCell)
+		{
+			FirstTileHoveredAfterDragging = null;
+		}
+
+		if ( FirstTileHoveredAfterDragging == null && StartDragWorldCell != hoveredWorldCell)
+		{
+			FirstTileHoveredAfterDragging = hoveredWorldCell;
+		}
+
+		if ( EndDragWorldCell != hoveredWorldCell )
 		{
 			EndDragWorldCell = hoveredWorldCell;
 		}
 
-		var buildPath = CalculateBuildPath( StartDragWorldCell, EndDragWorldCell );
-
+		var buildPath = CalculateBuildPath();
 		var isValid = PassBuildingRestrictionCheck( buildPath, false );
-
-		buildPath.ForEach( path => DrawDebugSquare( path, isValid ? Color.Green : Color.Red, 0f ) );
+		foreach(var path in buildPath)
+		{
+			var sameBuildDef = TycoonGame.Instance.WorldManager.DoesBuildingTypeExistOn( path.WorldCoordinate, BuildingDefinition );
+			DrawDebugSquare( path, !isValid ? Color.Red : sameBuildDef ? Color.Orange : Color.Green, 0f );
+		}
 
 		if ( Input.Pressed( InputButton.PrimaryAttack ) )
 		{
-			BuildingController.ConCmd_PlaceBuilding( SerializePlacementString( StartDragWorldCell, EndDragWorldCell ) );
+			var placeData = new PlaceData
+			{
+				StartDragWorldCell = StartDragWorldCell,
+				EndDragWorldCell = EndDragWorldCell,
+				FirstTileHoveredAfterDragging = FirstTileHoveredAfterDragging,
+				IsAnchored = IsAnchored
+			};
+
+			BuildingController.ConCmd_PlaceBuilding( JsonSerializer.Serialize( placeData ) );
+
 			ResetDrag();
 		}
 	}
 
-	private List<WorldCell> CalculateBuildPath( WorldCell start, WorldCell endCell )
+	public class TestME
+	{
+		public string Blah { get; set; }
+	}
+
+	private List<WorldCell> CalculateBuildPath( )
 	{
 		var list = new List<WorldCell>();
 
-		var minX = Math.Min( start.WorldCoordinate.X, endCell.WorldCoordinate.X );
-		var minY = Math.Min( start.WorldCoordinate.Y, endCell.WorldCoordinate.Y );
-		var maxX = Math.Max( start.WorldCoordinate.X, endCell.WorldCoordinate.X );
-		var maxY = Math.Max( start.WorldCoordinate.Y, endCell.WorldCoordinate.Y );
+		var minX = Math.Min( StartDragWorldCell.WorldCoordinate.X, EndDragWorldCell.WorldCoordinate.X );
+		var minY = Math.Min( StartDragWorldCell.WorldCoordinate.Y, EndDragWorldCell.WorldCoordinate.Y );
+		var maxX = Math.Max( StartDragWorldCell.WorldCoordinate.X, EndDragWorldCell.WorldCoordinate.X );
+		var maxY = Math.Max( StartDragWorldCell.WorldCoordinate.Y, EndDragWorldCell.WorldCoordinate.Y );
 
 		var xDistance = maxX - minX;
 		var yDistance = maxY - minY;
 
-		if (xDistance >= yDistance)
+		if ( IsAnchored && FirstTileHoveredAfterDragging != null)
 		{
-			for ( var i = minX; i <= maxX; i++ )
+			// Follow the mouse by always going to the first tile hovered after starting the drag.
+			if ( Math.Abs( FirstTileHoveredAfterDragging.WorldCoordinate.X - StartDragWorldCell.WorldCoordinate.X ) >= 1)
 			{
-				list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( i, start.WorldCoordinate.Y ) ) );
-			}
-		} 
-		else
-		{
-			for ( var i = minY; i <= maxY; i++ )
+				// In this case they moved x first so do x first
+				for ( var i = minX; i <= maxX; i++ )
+				{
+					list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( i, StartDragWorldCell.WorldCoordinate.Y ) ) );
+				}
+
+				for ( var i = minY; i <= maxY; i++ )
+				{
+					var wc = TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( EndDragWorldCell.WorldCoordinate.X, i ) );
+					if ( !list.Contains( wc ) )
+					{
+						list.Add( wc );
+					}
+				}
+			} 
+			else
 			{
-				list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( start.WorldCoordinate.X, i ) ) );
+				// In this case they moved y first so do y first
+				for ( var i = minY; i <= maxY; i++ )
+				{
+					list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( StartDragWorldCell.WorldCoordinate.X, i ) ) );
+				}
+
+				for ( var i = minX; i <= maxX; i++ )
+				{
+					var wc = TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( i, EndDragWorldCell.WorldCoordinate.Y ) );
+					if (!list.Contains( wc ) )
+					{
+						list.Add( wc );
+					}
+				}
 			}
 		}
-
+		else if ( IsAnchored )
+		{
+			list.Add( StartDragWorldCell );
+		}
+		else
+		{
+			if ( xDistance >= yDistance )
+			{
+				for ( var i = minX; i <= maxX; i++ )
+				{
+					list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( i, StartDragWorldCell.WorldCoordinate.Y ) ) );
+				}
+			}
+			else
+			{
+				for ( var i = minY; i <= maxY; i++ )
+				{
+					list.Add( TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( StartDragWorldCell.WorldCoordinate.X, i ) ) );
+				}
+			}
+		}
 
 		return list;
 	}
@@ -201,7 +286,11 @@ public class RoadPlacementController : PlacementController
 
 	private int CalculateTotalCost( List<WorldCell> buildPath )
 	{
-		return BuildingDefinition.Price * buildPath.Count;
+		var filteredCount = buildPath
+			.Where( path => !TycoonGame.Instance.WorldManager.DoesBuildingTypeExistOn( path.WorldCoordinate, BuildingDefinition ) )
+			.Count();
+
+		return BuildingDefinition.Price * filteredCount;
 	}
 
 	private bool PassMoneyCheck( List<WorldCell> buildPath, bool showErrorPopup ) 
@@ -219,37 +308,11 @@ public class RoadPlacementController : PlacementController
 		return true;
 	}
 
-	private string SerializePlacementString( WorldCell startWorldCell, WorldCell endWorldCell)
+	private class PlaceData
 	{
-		return $"{startWorldCell.WorldCoordinate.X},{startWorldCell.WorldCoordinate.Y},{endWorldCell.WorldCoordinate.X},{endWorldCell.WorldCoordinate.Y}";
-	}
-
-
-	private void DeserializePlacementString( string data, out WorldCell startWorldCell, out WorldCell endWorldCell)
-	{
-		startWorldCell = null;
-		endWorldCell = null;
-
-		var split = data.Split( ',' );
-
-		if ( split.Length != 4 )
-		{
-			LOGGER.Error( $"Failed to deserialize placement string" );
-			return;
-		}
-
-		var startWorldCellXIsNumeric = int.TryParse( split[0], out int startWorldCellX );
-		var startWorldCellYIsNumeric = int.TryParse( split[1], out int startWorldCellY );
-		var endWorldCellXIsNumeric = int.TryParse( split[2], out int endWorldCellX );
-		var endWorldCellYIsNumeric = int.TryParse( split[3], out int endWorldCellY );
-
-		if ( !startWorldCellXIsNumeric || !startWorldCellYIsNumeric || !endWorldCellXIsNumeric || !endWorldCellYIsNumeric )
-		{
-			LOGGER.Error( $"Failed to deserialize placement string" );
-			return;
-		}
-
-		startWorldCell = TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( startWorldCellX, startWorldCellY ) );
-		endWorldCell = TycoonGame.Instance.WorldManager.GetWorldCell( new WorldCoordinate( endWorldCellX, endWorldCellY ) );
+		public WorldCell StartDragWorldCell { get; set; }
+		public WorldCell EndDragWorldCell { get; set; }
+		public WorldCell FirstTileHoveredAfterDragging { get; set; }
+		public bool IsAnchored { get; set; }
 	}
 }

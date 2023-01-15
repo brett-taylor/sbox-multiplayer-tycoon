@@ -49,7 +49,7 @@ public partial class TycoonGame : GameManager
 			WorldManager = new WorldManager();
 			var seed = new Random().Float( -1f, 1f ) * 50_00f;
 			seed = 696.17926f;
-			WorldManager.CreateWorld( new WorldCoordinate( 20, 20 ), seed );
+			WorldManager.CreateWorld( new WorldCoordinate( 50, 50 ), seed );
 
 			CompanyManager = new CompanyManager();
 			VehicleManager = new VehicleManager();
@@ -63,6 +63,7 @@ public partial class TycoonGame : GameManager
 		cl.Pawn = new Player.Player();
 
 		CreateWorldClient( To.Single( cl ), WorldManager.WorldSize.X, WorldManager.WorldSize.Y, WorldManager.Seed );
+		WorldManager.RefreshBuildingsForNewClient( cl );
 	}
 
 	public override void ClientDisconnect( IClient cl, NetworkDisconnectionReason reason )
@@ -75,9 +76,8 @@ public partial class TycoonGame : GameManager
 		CompanyManager.ClientDisconnect( cl, reason );
 	}
 
-
 	[ClientRpc]
-	private void CreateWorldClient(int worldSizeX, int worldSizeY, float seed)
+	private void CreateWorldClient( int worldSizeX, int worldSizeY, float seed )
 	{
 		WorldManager.CreateWorld( new WorldCoordinate( worldSizeX, worldSizeY ), seed );
 	}

@@ -2,9 +2,8 @@
 using Sandbox.Component;
 using TycoonGame.Building.Definitions;
 using TycoonGame.Player;
-using TycoonGame.Utilities;
 using TycoonGame.Utilities.Enumertion;
-using TycoonGame.World;
+using TycoonGame.World.Data;
 
 namespace TycoonGame.Building.Archetypes;
 
