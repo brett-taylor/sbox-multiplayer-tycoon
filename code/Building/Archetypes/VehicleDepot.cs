@@ -26,6 +26,8 @@ public partial class VehicleDepot : BaseBuilding
 
 	public override void SetBuildingDefinition( BuildingDefinition buildingDefinition )
 	{
+		base.SetBuildingDefinition( buildingDefinition );
+
 		if (!buildingDefinition.Properties.ContainsKey(PROPERTY_VEHICLE_GROUP_TYPE_KEY))
 		{
 			LOGGER.Error( $"Vehicle Depot expects a { PROPERTY_VEHICLE_GROUP_TYPE_KEY } property" );
@@ -40,8 +42,6 @@ public partial class VehicleDepot : BaseBuilding
 				return;
 			}
 		}
-
-		base.SetBuildingDefinition( buildingDefinition );
 	}
 
 	public override void Selected( Player.Player player )

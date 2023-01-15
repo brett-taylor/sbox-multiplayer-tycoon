@@ -12,18 +12,12 @@ public partial class WorldManager
 
 	public void RegisterNewBuilding( WorldCoordinate worldCoordinate, BaseBuilding building )
 	{
-		if (Buildings.ContainsKey( worldCoordinate ) ) 
-		{
-			throw new System.Exception( $"Building already found on {worldCoordinate}" );
-		}
-
-		Buildings.Add( worldCoordinate, building );
-		RegisterNewBuildingsClient( To.Everyone, SerializeBuildingDictionary() );
+		RegisterNewBuildings( new Dictionary<WorldCoordinate, BaseBuilding> { { worldCoordinate, building } } );
 	}
 
 	public void RegisterNewBuildings( Dictionary<WorldCoordinate, BaseBuilding> newBuildings)
 	{
-		foreach(var kvp in newBuildings )
+		foreach ( var kvp in newBuildings )
 		{
 			if ( Buildings.ContainsKey( kvp.Key ) )
 			{
@@ -31,6 +25,19 @@ public partial class WorldManager
 			}
 
 			Buildings.Add( kvp.Key, kvp.Value);
+		}
+
+		foreach( var kvp in newBuildings )
+		{
+			var worldCell = GetWorldCell( kvp.Key );
+			foreach ( var possibleNeighbour in worldCell.AllNonNullNeighbors() )
+			{
+				if ( !DoesBuildingExistOn( possibleNeighbour.WorldCoordinate, out BaseBuilding building ) )
+					continue;
+
+				building.NeighbourUpdated( worldCell );
+			}
+
 		}
 
 		RegisterNewBuildingsClient( To.Everyone, SerializeBuildingDictionary() );
@@ -78,7 +85,7 @@ public partial class WorldManager
 
 		Buildings.Count.Write( w );
 		
-		foreach (var kvp in Buildings)
+		foreach ( var kvp in Buildings )
 		{
 			kvp.Key.X.Write( w );
 			kvp.Key.Y.Write( w );
@@ -96,7 +103,7 @@ public partial class WorldManager
 		using var r = new BinaryReader( s );
 		var size = r.ReadInt32();
 
-		for (int i = 0; i < size; i++ )
+		for ( int i = 0; i < size; i++ )
 		{
 			var worldCoordinate = new WorldCoordinate( r.ReadInt32(), r.ReadInt32() );
 			var building = (BaseBuilding) FindByIndex( r.ReadInt32() );

@@ -59,6 +59,7 @@ public class FixedSizePlacementController : PlacementController
 		base.UpdateClient( cl );
 
 		var hoveredWorldCell = (cl.Pawn as Player.Player).GetHoveredWorldCell();
+
 		if ( hoveredWorldCell == null )
 		{
 			FixedSizePlacementGhostClient.EnableDrawing = false;
@@ -69,7 +70,7 @@ public class FixedSizePlacementController : PlacementController
 		if (LastHoveredWorldCell != hoveredWorldCell)
 		{
 			IsCurrentlyValid = BuildingRestrictionManager.Instance.IsValid( BuildingDefinition, hoveredWorldCell, out BuildingRestriction ignored );
-		}
+		}		
 
 		FixedSizePlacementGhostClient.SetPosition( hoveredWorldCell );
 		FixedSizePlacementGhostClient.EnableDrawing = true;

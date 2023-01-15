@@ -92,6 +92,18 @@
           "r": "Collide"
         }
       ]
-    }
+    },
+    "Compiler": {
+      "RootNamespace": "TycoonGame",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;"
+    },
+    "PackageSettings": [
+      {
+        "Choices": [],
+        "ConVarName": "",
+        "DisplayName": "New Setting..."
+      }
+    ]
   }
 }

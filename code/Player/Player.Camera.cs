@@ -17,7 +17,7 @@ public partial class Player
 	private float ZoomSpeed { get; set; } = -0.05f;
 	private float ZoomLerpTime { get; set; } = 10f;
 	private float ZNear { get; set; } = 10f;
-	private float ZFar { get; set; } = 25_000f;
+	private float ZFar { get; set; } = 30_000f;
 
 	private Vector3 CurrentLookPosition { get; set; }
 	public Vector3 TargetLookPosition { get; set; }

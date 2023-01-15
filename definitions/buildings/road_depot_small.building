@@ -17,6 +17,8 @@
 			"IS_ON_GROUND",
 			"NO_BUILDING_ON_WORLD_CELL",
 		]
+		TileModel = null
+		ProvideRoadConnection = true
 		Properties = 
 		{
 			VehicleGroupType = "ROAD"

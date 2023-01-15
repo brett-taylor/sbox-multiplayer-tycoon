@@ -13,7 +13,7 @@ namespace TycoonGame;
 4. Better Terrain with water ✅
 5. Ships ✅
 6. Ship Depot (With ground/water restriction in building controller) ✅
-7. Road dragging and tiles updating (Probably just wave function collapse on surrounding neighbours at this point)
+7. Road dragging and tiles updating (Rough system, needs whole Track system that will come with rails)✅
 8. Basic Industry chain (Producer building, vehicle can pick up resource, drop to consumer, get money, no producer/supplier mix yet)
 9. Rail dragging building. (Probably just straight tracks and corners, no junctions yet)
 10. Trains and driving (Multi entity vehicles)

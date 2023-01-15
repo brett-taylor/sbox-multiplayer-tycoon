@@ -175,12 +175,7 @@ public class RoadPlacementController : PlacementController
 		}
 	}
 
-	public class TestME
-	{
-		public string Blah { get; set; }
-	}
-
-	private List<WorldCell> CalculateBuildPath( )
+	private List<WorldCell> CalculateBuildPath()
 	{
 		var list = new List<WorldCell>();
 
